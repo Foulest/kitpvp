@@ -1,9 +1,9 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class ArmorColorCmd {
 
     private static final int HEX_LENGTH = 6;

@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -13,7 +13,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Cactus implements Kit {
@@ -46,7 +45,7 @@ public class Cactus implements Kit {
                 + "MwNzRlNjA2ZDIwNzg0YTc3OTZmYWIyYzBkMDM1NjRmNjVhODI2YzQwYTA1ZWU3NjkxYjYxODZjMjExYzlmMiJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fCactus's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fCactus's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x197F22)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_LEGGINGS).color(Color.fromRGB(0x197F22)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_BOOTS).color(Color.fromRGB(0x197F22)).unbreakable(true).getItem()

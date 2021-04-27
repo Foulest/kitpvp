@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -14,7 +14,6 @@ import java.util.Objects;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Burrower implements Kit {
@@ -48,7 +47,7 @@ public class Burrower implements Kit {
                 + "M0NDBlYWM4YmQ1MzA4YzMyY2Y5ODJjM2I5YzNjOWI0OWQzNDVkYjY0ODNlZDQ0Nzg0ZmQyZDk0ZmNhMzIyZSJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).hideInfo().name("&fBurrower's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).hideInfo().name("&fBurrower's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_CHESTPLATE).hideInfo().unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_LEGGINGS).hideInfo().unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_BOOTS).hideInfo().unbreakable(true).getItem()

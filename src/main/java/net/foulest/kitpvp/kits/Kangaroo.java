@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +17,6 @@ import java.util.Objects;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Kangaroo implements Kit {
@@ -53,7 +52,7 @@ public class Kangaroo implements Kit {
                 + "hYjQyYWZhOTJhZGYxNWFiZmJmNDljZDA5NjY0NDA5NjQ5Mzk3N2YzNjYyMDNmNTIzMTFlYzk3ODJiY2YyNCJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fKangaroo's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKangaroo's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x7F4A19)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_FALL, 4).unbreakable(true).getItem()

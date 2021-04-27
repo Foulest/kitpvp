@@ -1,7 +1,11 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.region;
 
 import lombok.Getter;
 import net.foulest.kitpvp.KitPvP;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.listeners.CombatLog;
+import net.foulest.kitpvp.util.ConfigManager;
+import net.foulest.kitpvp.util.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,7 +16,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @Getter
@@ -47,13 +50,14 @@ public class Spawn {
         }
 
         playerData.clearCooldowns();
+        CombatLog.remove(player);
         playerData.setKit(null);
 
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
 
-        KITPVP.giveDefaultItems(player);
+        KitPvP.giveDefaultItems(player);
 
         player.setHealth(20);
         player.teleport(location);

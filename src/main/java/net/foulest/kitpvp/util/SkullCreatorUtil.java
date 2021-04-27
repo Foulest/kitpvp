@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -20,16 +20,15 @@ import java.util.UUID;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
-public final class SkullCreator {
+public final class SkullCreatorUtil {
 
     private static Field blockProfileField;
     private static Method metaSetProfileMethod;
     private static Field metaProfileField;
 
-    private SkullCreator() {
+    private SkullCreatorUtil() {
     }
 
     public static ItemStack createSkull() {

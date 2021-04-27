@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,6 @@ import java.util.Objects;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Hulk implements Kit {
@@ -52,7 +51,7 @@ public class Hulk implements Kit {
                 + "GJhMTIwZTM3MjdkZDc3MDY2Mjk3MThhNTE3MTI1YjFkNTgwNWZmYTUxM2E3ZDcxZmYyMmRiYTg4NjRmZWMzMSJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fHulk's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fHulk's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x3E7F2B)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_BOOTS).color(Color.fromRGB(0x3E7F2B)).unbreakable(true).getItem()

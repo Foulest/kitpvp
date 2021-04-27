@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +15,6 @@ import java.util.Objects;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Spiderman implements Kit {
@@ -49,7 +48,7 @@ public class Spiderman implements Kit {
                 + "M0MGQ5ODBjNjEyNzI0M2NkM2JiZGMwN2FhOTY1NDgzZWI2YTdlZWFiOWFhY2U5NzAzZGY5ZGYyOGQ3ZjU1MiJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fSpiderman's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fSpiderman's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0xCC2E33)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.DIAMOND_BOOTS).unbreakable(true).getItem()

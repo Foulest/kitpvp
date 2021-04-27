@@ -1,7 +1,7 @@
-package net.foulest.kitpvp.utils.kits;
+package net.foulest.kitpvp.util.kits;
 
 import lombok.Getter;
-import net.foulest.kitpvp.utils.PlayerData;
+import net.foulest.kitpvp.data.PlayerData;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import java.util.List;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @Getter

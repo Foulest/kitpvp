@@ -1,15 +1,15 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
-import net.foulest.kitpvp.utils.menus.KitEnchanter;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
+import net.foulest.kitpvp.menus.KitEnchanter;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class KitEnchanterCmd {
 
     @Command(name = "enchanter", aliases = {"kitenchanter"}, description = "Opens the Kit Enchanter.",

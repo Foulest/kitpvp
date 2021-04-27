@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,7 +13,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Ninja implements Kit {
@@ -47,7 +46,7 @@ public class Ninja implements Kit {
                 + "jQ2ZmZlNGY2OGRhYWEwZjgzNDUzNmNiNTM4NmEzYTc5ZTZiM2U4NDM1OTY5NDM4MDRlMWIwOGE4MmVkNDRhNiJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fNinja's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fNinja's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x0C0C0C)).unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_BOOTS).unbreakable(true).getItem()

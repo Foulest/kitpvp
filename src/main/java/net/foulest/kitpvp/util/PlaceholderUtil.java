@@ -1,17 +1,15 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.listeners.CombatLog;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
-public class Placeholders extends PlaceholderExpansion {
-
-    private static final CombatLog COMBAT_LOG = CombatLog.getInstance();
+public class PlaceholderUtil extends PlaceholderExpansion {
 
     @Override
     public String getIdentifier() {
@@ -25,7 +23,7 @@ public class Placeholders extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return "1.0.8";
+        return "1.1.1";
     }
 
     @Override
@@ -79,7 +77,7 @@ public class Placeholders extends PlaceholderExpansion {
 
         // Placeholder: %kitpvp_combattag%
         if (identifier.equals("combattag")) {
-            return COMBAT_LOG.isInCombat(player) ? "&c00:" + String.format("%02d", COMBAT_LOG.getRemainingTime(player)) : "&aSafe";
+            return CombatLog.isInCombat(player) ? "&c00:" + String.format("%02d", CombatLog.getRemainingTime(player)) : "&aSafe";
         }
 
         // Placeholder: %kitpvp_activekit%

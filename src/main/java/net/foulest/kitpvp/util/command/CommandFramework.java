@@ -1,6 +1,6 @@
-package net.foulest.kitpvp.utils.command;
+package net.foulest.kitpvp.util.command;
 
-import net.foulest.kitpvp.utils.MessageUtil;
+import net.foulest.kitpvp.util.MessageUtil;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -20,10 +20,8 @@ import java.util.Map.Entry;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
-@SuppressWarnings("SameReturnValue")
 public class CommandFramework implements CommandExecutor {
 
     private final Map<String, Entry<Method, Object>> commandMap = new HashMap<>();
@@ -47,6 +45,10 @@ public class CommandFramework implements CommandExecutor {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void defaultCommand(CommandArgs args) {
+        args.getSender().sendMessage(args.getLabel() + " is disabled on this server.");
     }
 
     @Override
@@ -209,9 +211,5 @@ public class CommandFramework implements CommandExecutor {
                 ex.printStackTrace();
             }
         }
-    }
-
-    private void defaultCommand(CommandArgs args) {
-        args.getSender().sendMessage(args.getLabel() + " is disabled on this server.");
     }
 }

@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -11,7 +11,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Knight implements Kit {
@@ -43,7 +42,7 @@ public class Knight implements Kit {
                 + "A1Mzk3M2U3YzUyMzcyYzNiMTExMzk0ZGZmOTUxOWNiYWMxZmJhM2Y2NTliMjE4NmJlZjhlZWY5ZTEwZmEyIn19fQ==";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fKnight's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKnight's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).getItem()

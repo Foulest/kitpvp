@@ -1,5 +1,6 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -15,17 +16,13 @@ import java.util.List;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @Getter
+@AllArgsConstructor
 public class ItemBuilder {
 
     private final ItemStack item;
-
-    public ItemBuilder(ItemStack is) {
-        item = is;
-    }
 
     public ItemBuilder(Material mat) {
         item = new ItemStack(mat);

@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
 import net.foulest.kitpvp.KitPvP;
 
@@ -6,7 +6,6 @@ import java.sql.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class MySQL {
@@ -18,7 +17,7 @@ public class MySQL {
         return INSTANCE;
     }
 
-    public boolean exists(String scope, String table, String column, String logicGate, String data) {
+    public static boolean exists(String scope, String table, String column, String logicGate, String data) {
         if (data != null) {
             data = "'" + data + "'";
         }
@@ -39,7 +38,7 @@ public class MySQL {
         return false;
     }
 
-    public void update(String command) {
+    public static void update(String command) {
         try (Connection connection = KITPVP.getHikari().getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(command);
@@ -48,7 +47,7 @@ public class MySQL {
         }
     }
 
-    public ResultSet query(String scope, String table, String column, String logicGate, String data) {
+    public static ResultSet query(String scope, String table, String column, String logicGate, String data) {
         if (data != null) {
             data = "'" + data + "'";
         }
@@ -67,7 +66,7 @@ public class MySQL {
         return result;
     }
 
-    public Object get(String selected, String scope, String table, String column, String logicGate, String data) {
+    public static Object get(String selected, String scope, String table, String column, String logicGate, String data) {
         if (data != null) {
             data = "'" + data + "'";
         }

@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils.command;
+package net.foulest.kitpvp.util.command;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @Target(ElementType.METHOD)

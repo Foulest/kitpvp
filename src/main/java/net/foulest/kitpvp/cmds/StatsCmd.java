@@ -1,17 +1,17 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class StatsCmd {
 
     private static final int MAX_NAME_LENGTH = 16;
@@ -31,7 +31,7 @@ public class StatsCmd {
             playerData = PlayerData.getInstance(sender);
 
             MessageUtil.messagePlayer(sender, "");
-            MessageUtil.messagePlayer(sender, " &alYour Stats");
+            MessageUtil.messagePlayer(sender, " &a&lYour Stats");
             MessageUtil.messagePlayer(sender, " &fKills: &e" + playerData.getKills());
             MessageUtil.messagePlayer(sender, " &fDeaths: &e" + playerData.getDeaths());
             MessageUtil.messagePlayer(sender, " &fK/D Ratio: &e" + playerData.getKDRText());

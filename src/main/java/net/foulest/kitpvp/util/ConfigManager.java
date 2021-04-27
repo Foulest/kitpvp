@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
 import net.foulest.kitpvp.KitPvP;
 import org.bukkit.Bukkit;
@@ -10,7 +10,6 @@ import java.io.IOException;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @SuppressWarnings({"ResultOfMethodCallIgnored"})

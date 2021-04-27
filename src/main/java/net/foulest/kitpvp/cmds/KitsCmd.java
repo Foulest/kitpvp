@@ -1,19 +1,19 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
-import net.foulest.kitpvp.utils.kits.Kit;
-import net.foulest.kitpvp.utils.kits.KitManager;
-import net.foulest.kitpvp.utils.menus.KitSelector;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
+import net.foulest.kitpvp.util.kits.Kit;
+import net.foulest.kitpvp.util.kits.KitManager;
+import net.foulest.kitpvp.menus.KitSelector;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class KitsCmd {
 
     private static final KitManager KIT_MANAGER = KitManager.getInstance();

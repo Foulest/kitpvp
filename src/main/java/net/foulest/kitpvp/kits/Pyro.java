@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +15,6 @@ import java.util.Objects;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Pyro implements Kit {
@@ -49,7 +48,7 @@ public class Pyro implements Kit {
                 + "mNTc2NDU0Y2I2NDFhNmU1OTVlZGY0ZTc3YTcwYzIwM2U4OGVjYWIwZjIyMGQzZmUzMGZiM2NjYzhjOGJhOCJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fPyro's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fPyro's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_CHESTPLATE).unbreakable(true).getItem(),
                 new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.GOLD_BOOTS).enchant(Enchantment.PROTECTION_FIRE, 4).unbreakable(true).getItem()

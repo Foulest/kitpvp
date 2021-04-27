@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils.command;
+package net.foulest.kitpvp.util.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class BukkitCompleter implements TabCompleter {
@@ -39,6 +38,7 @@ public class BukkitCompleter implements TabCompleter {
 
             if (completers.containsKey(cmdLabel)) {
                 Entry<Method, Object> entry = completers.get(cmdLabel);
+
                 try {
                     return (List<String>) entry.getKey().invoke(entry.getValue(),
                             new CommandArgs(sender, command, label, args, cmdLabel.split("\\.").length - 1));

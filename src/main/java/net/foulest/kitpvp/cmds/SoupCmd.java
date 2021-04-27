@@ -1,20 +1,20 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class SoupCmd {
 
     private static final Regions REGIONS = Regions.getInstance();

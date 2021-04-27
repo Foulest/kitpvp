@@ -1,18 +1,18 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class BountyCmd {
 
     private static final String SET_NAME = "set";

@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils.command;
+package net.foulest.kitpvp.util.command;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandExecutor;
@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class BukkitCommand extends org.bukkit.command.Command {
@@ -29,8 +28,6 @@ public class BukkitCommand extends org.bukkit.command.Command {
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
         boolean success;
-        String newLine = "\n";
-        String commandPlaceholder = "<command>";
 
         if (!owningPlugin.isEnabled()) {
             return false;
@@ -43,7 +40,7 @@ public class BukkitCommand extends org.bukkit.command.Command {
         success = executor.onCommand(sender, this, commandLabel, args);
 
         if (!success && usageMessage.length() > 0) {
-            for (String line : usageMessage.replace(commandPlaceholder, commandLabel).split(newLine)) {
+            for (String line : usageMessage.replace("<command>", commandLabel).split("\n")) {
                 sender.sendMessage(line);
             }
         }

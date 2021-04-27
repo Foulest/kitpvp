@@ -2,10 +2,10 @@ package net.foulest.kitpvp.listeners;
 
 import net.foulest.kitpvp.KitPvP;
 import net.foulest.kitpvp.kits.*;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -29,7 +29,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class KitListener implements Listener {
@@ -46,7 +45,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onBurrowerAbility(PlayerInteractEvent event) {
+    public static void onBurrowerAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Location> roomLocations = getRoomLocations(player.getLocation());
@@ -86,12 +85,13 @@ public class KitListener implements Listener {
 
             MessageUtil.messagePlayer(player, "&aYour ability has been used.");
             playerData.setCooldown(playerData.getKit(), playerData.getKit().getDisplayItem().getType(), 30, true);
-            player.setMetadata("noFall", new FixedMetadataValue(KITPVP, true));
+            playerData.setNoFall(true);
+            playerData.setPendingNoFallRemoval(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onCactusHit(EntityDamageByEntityEvent event) {
+    public static void onCactusHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player damager = (Player) event.getDamager();
             Player receiver = (Player) event.getEntity();
@@ -111,7 +111,7 @@ public class KitListener implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onDragonAbility(PlayerInteractEvent event) {
+    public static void onDragonAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -144,18 +144,20 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onFishermanAbility(PlayerFishEvent event) {
+    public static void onFishermanAbility(PlayerFishEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
-        if (playerData.getKit() instanceof Fisherman
-                && event.getState().equals(PlayerFishEvent.State.CAUGHT_ENTITY)
-                && !playerData.hasCooldown(true)
-                && !REGIONS.isInSafezone(player)) {
+        if (event.getCaught() instanceof Player) {
+            Player receiver = (Player) event.getCaught();
+            PlayerData receiverData = PlayerData.getInstance(receiver);
 
-            if (event.getCaught() instanceof Player) {
-                Player receiver = (Player) event.getCaught();
-                PlayerData receiverData = PlayerData.getInstance(receiver);
+            CombatLog.markForCombat(player, receiver);
+
+            if (playerData.getKit() instanceof Fisherman
+                    && event.getState().equals(PlayerFishEvent.State.CAUGHT_ENTITY)
+                    && !playerData.hasCooldown(true)
+                    && !REGIONS.isInSafezone(player)) {
 
                 if (receiverData.getKit() != null && !REGIONS.isInSafezone(receiver)) {
                     MessageUtil.messagePlayer(player, "&aYour ability has been used.");
@@ -165,15 +167,15 @@ public class KitListener implements Listener {
                 } else {
                     event.setCancelled(true);
                 }
-
-            } else {
-                event.setCancelled(true);
             }
+
+        } else {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onGhostMove(PlayerMoveEvent event) {
+    public static void onGhostMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -190,7 +192,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onTamerAbility(PlayerInteractEvent event) {
+    public static void onTamerAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -224,7 +226,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onHulkAbility(PlayerInteractEvent event) {
+    public static void onHulkAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -248,6 +250,9 @@ public class KitListener implements Listener {
                 return;
             }
 
+            MessageUtil.messagePlayer(player, "&aYour ability has been used.");
+            playerData.setCooldown(playerData.getKit(), playerData.getKit().getDisplayItem().getType(), 30, true);
+
             player.getWorld().createExplosion(player.getLocation(), 0.0f, false);
 
             for (Player playerInList : playerList) {
@@ -265,14 +270,11 @@ public class KitListener implements Listener {
                     return;
                 }
             }
-
-            MessageUtil.messagePlayer(player, "&aYour ability has been used.");
-            playerData.setCooldown(playerData.getKit(), playerData.getKit().getDisplayItem().getType(), 30, true);
         }
     }
 
     @EventHandler
-    public void onImprisonerAbility(PlayerInteractEvent event) {
+    public static void onImprisonerAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -289,7 +291,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onImprisonerHit(EntityDamageByEntityEvent event) {
+    public static void onImprisonerHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Snowball) {
             Snowball snowball = (Snowball) event.getDamager();
 
@@ -356,7 +358,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onKangarooAbility(PlayerInteractEvent event) {
+    public static void onKangarooAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Entity entityPlayer = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
@@ -385,7 +387,7 @@ public class KitListener implements Listener {
 
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onMageAbility(PlayerInteractEvent event) {
+    public static void onMageAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -404,7 +406,9 @@ public class KitListener implements Listener {
             int amplifier = RANDOM.nextInt(3);
             int duration = Math.max(5, (RANDOM.nextInt(30) + 1)) * 20;
 
-            if (PotionEffectType.getById(effect).getName().equals("HUNGER")
+            if (PotionEffectType.getById(effect) == null
+                    || PotionEffectType.getById(effect).getName() == null
+                    || PotionEffectType.getById(effect).getName().equals("HUNGER")
                     || PotionEffectType.getById(effect).getName().equals("SATURATION")) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, amplifier, false, false));
             } else {
@@ -417,7 +421,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onMonkAbility(PlayerInteractEntityEvent event) {
+    public static void onMonkAbility(PlayerInteractEntityEvent event) {
         Player damager = event.getPlayer();
         PlayerData damagerData = PlayerData.getInstance(damager);
 
@@ -447,7 +451,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onSpidermanAbility(PlayerInteractEvent event) {
+    public static void onSpidermanAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
@@ -464,7 +468,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onSpidermanHit(EntityDamageByEntityEvent event) {
+    public static void onSpidermanHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Snowball) {
             Snowball snowball = (Snowball) event.getDamager();
 
@@ -528,7 +532,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onSummonerAbility(PlayerInteractEvent event) {
+    public static void onSummonerAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -577,7 +581,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onThorAbility(PlayerInteractEvent event) {
+    public static void onThorAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -615,7 +619,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onTimelordAbility(PlayerInteractEvent event) {
+    public static void onTimelordAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -656,7 +660,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onVampireAbility(PlayerInteractEvent event) {
+    public static void onVampireAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -721,7 +725,8 @@ public class KitListener implements Listener {
                         }
 
                         if (playerInList.isOnline() && !DRAINED_EFFECTS.get(playerInList.getUniqueId()).isEmpty()
-                                && playerDataInList.getKit() != null && currentKit == playerDataInList.getKit()) {
+                                && playerDataInList.getKit() != null && currentKit != null
+                                && currentKit == playerDataInList.getKit()) {
                             for (PotionEffect effect : DRAINED_EFFECTS.get(playerInList.getUniqueId())) {
                                 playerInList.addPotionEffect(effect);
                             }
@@ -740,7 +745,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    public void onVampireHit(EntityDamageByEntityEvent event) {
+    public static void onVampireHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
             Player damager = (Player) event.getDamager();
             Player receiver = (Player) event.getEntity();
@@ -755,7 +760,7 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
-    public void onZenAbility(PlayerInteractEvent event) {
+    public static void onZenAbility(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
         List<Player> playerList = new ArrayList<>();
@@ -807,7 +812,7 @@ public class KitListener implements Listener {
         }
     }
 
-    public List<Block> getCageBlocks(Location location) {
+    public static List<Block> getCageBlocks(Location location) {
         ArrayList<Block> list = new ArrayList<>();
 
         list.add(location.clone().add(0.0, -1.0, 0.0).getBlock());
@@ -825,7 +830,7 @@ public class KitListener implements Listener {
         return list;
     }
 
-    public List<Location> getPlatform(Location location) {
+    public static List<Location> getPlatform(Location location) {
         ArrayList<Location> list = new ArrayList<>();
 
         list.add(location.clone());
@@ -840,7 +845,7 @@ public class KitListener implements Listener {
         return list;
     }
 
-    public List<Location> getRoomLocations(Location location) {
+    public static List<Location> getRoomLocations(Location location) {
         location.add(0.0, 9.0, 0.0);
 
         ArrayList<Location> list = new ArrayList<>(getPlatform(location));
@@ -869,7 +874,7 @@ public class KitListener implements Listener {
         return list;
     }
 
-    public List<Location> getSurroundingLocations(Location location) {
+    public static List<Location> getSurroundingLocations(Location location) {
         ArrayList<Location> list = new ArrayList<>();
 
         list.add(location.clone().add(-1.0, 0.0, 0.0));
@@ -879,7 +884,7 @@ public class KitListener implements Listener {
         return list;
     }
 
-    public void rollback(BlockState blockState) {
+    public static void rollback(BlockState blockState) {
         if (blockState instanceof Sign) {
             Sign sign = (Sign) blockState;
             Location location = sign.getLocation();

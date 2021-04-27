@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.SkullCreator;
-import net.foulest.kitpvp.utils.kits.Kit;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
+import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -11,7 +11,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class Thor implements Kit {
@@ -44,7 +43,7 @@ public class Thor implements Kit {
                 + "Zjg2NDRkZmQyNGM4MjRmNTU1NTY5ZWMwNjVjMDcwYTk3ZWQ5M2U1ZTY0M2E3MmQ1MzA0OGUyMDMyMWUwYjI3MCJ9fX0=";
 
         return new ItemStack[]{
-                new ItemBuilder(SkullCreator.itemFromBase64(base64)).name("&fThor's Head").unbreakable(true).getItem(),
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fThor's Head").unbreakable(true).getItem(),
                 new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).getItem(),
                 new ItemBuilder(Material.GOLD_LEGGINGS).unbreakable(true).getItem(),
                 new ItemBuilder(Material.GOLD_BOOTS).unbreakable(true).getItem()

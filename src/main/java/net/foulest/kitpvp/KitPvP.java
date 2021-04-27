@@ -1,21 +1,23 @@
 package net.foulest.kitpvp;
 
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import net.foulest.kitpvp.cmds.*;
+import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.kits.*;
 import net.foulest.kitpvp.listeners.*;
-import net.foulest.kitpvp.utils.*;
-import net.foulest.kitpvp.utils.command.CommandFramework;
-import net.foulest.kitpvp.utils.kits.Kit;
-import net.foulest.kitpvp.utils.kits.KitManager;
+import net.foulest.kitpvp.region.Spawn;
+import net.foulest.kitpvp.util.*;
+import net.foulest.kitpvp.util.command.CommandFramework;
+import net.foulest.kitpvp.util.kits.Kit;
+import net.foulest.kitpvp.util.kits.KitManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,9 +25,9 @@ import java.sql.Statement;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@Getter
 public class KitPvP extends JavaPlugin {
 
     private static KitPvP instance;
@@ -43,9 +45,11 @@ public class KitPvP extends JavaPlugin {
         framework = new CommandFramework(this);
 
         // Registers placeholders with PlaceholderAPI.
-        new Placeholders().register();
+        Bukkit.getLogger().info("[KitPvP] - Loading Placeholders...");
+        new PlaceholderUtil().register();
 
         // Creates the default config.
+        Bukkit.getLogger().info("[KitPvP] - Loading Config...");
         ConfigManager.setup();
         ConfigManager.get().addDefault("spawn.world", "world");
         ConfigManager.get().addDefault("spawn.x", 0.5);
@@ -65,6 +69,7 @@ public class KitPvP extends JavaPlugin {
         ConfigManager.save();
 
         // Sets up the MySQL database.
+        Bukkit.getLogger().info("[KitPvP] - Loading Hikari...");
         hikari = new HikariDataSource();
         hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         hikari.addDataSourceProperty("serverName", ConfigManager.get().getString("mysql.host"));
@@ -76,6 +81,7 @@ public class KitPvP extends JavaPlugin {
         hikari.addDataSourceProperty("useUnicode", "true");
 
         // Creates missing tables in the MySQL database.
+        Bukkit.getLogger().info("[KitPvP] - Loading MySQL...");
         try (Connection connection = hikari.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS PlayerStats (uuid VARCHAR(36), coins INT, " +
@@ -84,103 +90,108 @@ public class KitPvP extends JavaPlugin {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS PlayerKits (uuid VARCHAR(36), kitName VARCHAR(36))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS Bounties (uuid VARCHAR(36), bounty INT, benefactor VARCHAR(36))");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS Enchants (uuid VARCHAR(36), featherFalling BOOLEAN," +
-                    " knockback BOOLEAN, protection BOOLEAN, sharpness BOOLEAN, punch BOOLEAN, power BOOLEAN)");
-        } catch (SQLException e) {
-            e.printStackTrace();
+                    " thorns BOOLEAN, protection BOOLEAN, knockback BOOLEAN, sharpness BOOLEAN, punch BOOLEAN, power BOOLEAN)");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
 
         // Loads the plugin's listeners.
+        Bukkit.getLogger().info("[KitPvP] - Loading Listeners...");
         loadListeners(new DeathListener(), new EventListener(), new KitListener(), new StaffModeListener());
 
         // Loads the plugin's commands.
+        Bukkit.getLogger().info("[KitPvP] - Loading Commands...");
         loadCommands(new BalanceCmd(), new BountyCmd(), new ClearKitCmd(), new CombatLogCmd(), new EcoGiveCmd(),
                 new EcoSetCmd(), new KitsCmd(), new PayCmd(), new SetSpawnCmd(), new SpawnCmd(), new StatsCmd(),
                 new KitShopCmd(), new EcoTakeCmd(), new ArmorColorCmd(), new KitEnchanterCmd(), new SoupCmd(),
                 new PotionsCmd());
 
         // Loads the plugin's kits.
+        Bukkit.getLogger().info("[KitPvP] - Loading Kits...");
         loadKits(new Archer(), new Burrower(), new Cactus(), new Dragon(), new Fisherman(), new Ghost(), new Tamer(),
                 new Hulk(), new Imprisoner(), new Kangaroo(), new Knight(), new Mage(), new Monk(), new Ninja(),
                 new Pyro(), new Spiderman(), new Summoner(), new Tank(), new Thor(), new Timelord(), new Vampire(),
                 new Zen());
 
         // Loads the spawn.
+        Bukkit.getLogger().info("[KitPvP] - Loading Spawn...");
         Spawn.getInstance().load();
 
         // Loads online players' user data.
+        Bukkit.getLogger().info("[KitPvP] - Loading Player Data...");
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData.getInstance(player).load();
             Spawn.getInstance().teleport(player);
             player.getInventory().setHeldItemSlot(0);
         }
+
+        Bukkit.getLogger().info("[KitPvP] Loaded successfully.");
     }
 
     @Override
     public void onDisable() {
         // Unloads the kits saved in the Kit Manager.
+        Bukkit.getLogger().info("[KitPvP] - Unloading Kits...");
         KitManager.getInstance().unloadKits();
 
         // Saves the spawn.
+        Bukkit.getLogger().info("[KitPvP] - Saving Spawn...");
         Spawn.getInstance().save();
 
         // Saves online players' data.
+        Bukkit.getLogger().info("[KitPvP] - Saving Player Data...");
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerData.getInstance(player).saveAll();
 
-            if (CombatLog.getInstance().isInCombat(player)) {
-                CombatLog.getInstance().remove(player);
+            if (CombatLog.isInCombat(player)) {
+                CombatLog.remove(player);
             }
         }
 
         // Closes the MySQL connection.
+        Bukkit.getLogger().info("[KitPvP] - Closing Hikari...");
         if (hikari != null) {
             hikari.close();
         }
+
+        Bukkit.getLogger().info("[KitPvP] Shut down successfully.");
     }
 
-    public HikariDataSource getHikari() {
-        return hikari;
-    }
-
-    public void giveDefaultItems(Player player) {
+    public static void giveDefaultItems(Player player) {
         PlayerData playerData = PlayerData.getInstance(player);
-        String staffPerm = "fstaff.staff";
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.getInventory().clear();
-                player.getInventory().setArmorContents(null);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
 
-                ItemStack kitSelector = new ItemBuilder(Material.NETHER_STAR).name("&aKit Selector &7(Right Click)").getItem();
-                player.getInventory().setItem(0, kitSelector);
+        ItemStack kitSelector = new ItemBuilder(Material.NETHER_STAR).name("&aKit Selector &7(Right Click)").getItem();
+        player.getInventory().setItem(0, kitSelector);
 
-                ItemStack shopSelector = new ItemBuilder(Material.ENDER_CHEST).name("&aKit Shop &7(Right Click)").getItem();
-                player.getInventory().setItem(1, shopSelector);
+        ItemStack shopSelector = new ItemBuilder(Material.ENDER_CHEST).name("&aKit Shop &7(Right Click)").getItem();
+        player.getInventory().setItem(1, shopSelector);
 
-                ItemStack previousKit = new ItemBuilder(Material.WATCH).name("&aPrevious Kit &7(Right Click)").getItem();
-                player.getInventory().setItem(2, previousKit);
+        ItemStack previousKit = new ItemBuilder(Material.WATCH).name("&aPrevious Kit &7(Right Click)").getItem();
+        player.getInventory().setItem(2, previousKit);
 
-                ItemStack yourStats = new ItemBuilder(SkullCreator.itemFromUuid(player.getUniqueId())).name("&aYour Stats &7(Right Click)").getItem();
-                player.getInventory().setItem(4, yourStats);
+        ItemStack yourStats = new ItemBuilder(SkullCreatorUtil.itemFromUuid(player.getUniqueId())).name("&aYour Stats &7(Right Click)").getItem();
+        player.getInventory().setItem(4, yourStats);
 
-                ItemStack healingItem;
-                if (playerData.isUsingSoup()) {
-                    healingItem = new ItemBuilder(Material.MUSHROOM_SOUP).name("&aUsing Soup &7(Right Click)").getItem();
-                } else {
-                    healingItem = new ItemBuilder(Material.POTION).hideInfo().durability(16421).name("&aUsing Potions &7(Right Click)").getItem();
-                }
-                player.getInventory().setItem(6, healingItem);
+        ItemStack healingItem;
+        if (playerData.isUsingSoup()) {
+            healingItem = new ItemBuilder(Material.MUSHROOM_SOUP).name("&aUsing Soup &7(Right Click)").getItem();
+        } else {
+            healingItem = new ItemBuilder(Material.POTION).hideInfo().durability(16421).name("&aUsing Potions &7(Right Click)").getItem();
+        }
+        player.getInventory().setItem(6, healingItem);
 
-                ItemStack kitEnchanter = new ItemBuilder(Material.ENCHANTED_BOOK).name("&aKit Enchanter &7(Right Click)").getItem();
-                player.getInventory().setItem(7, kitEnchanter);
+        ItemStack kitEnchanter = new ItemBuilder(Material.ENCHANTED_BOOK).name("&aKit Enchanter &7(Right Click)").getItem();
+        player.getInventory().setItem(7, kitEnchanter);
 
-                if (player.hasPermission(staffPerm)) {
-                    ItemStack staffMode = new ItemBuilder(Material.EYE_OF_ENDER).name("&aStaff Mode &7(Right Click)").getItem();
-                    player.getInventory().setItem(8, staffMode);
-                }
-            }
-        }.runTaskLater(this, 1L);
+        player.updateInventory();
+
+//        if (player.hasPermission("KitPvP.staff")) {
+//            ItemStack staffMode = new ItemBuilder(Material.EYE_OF_ENDER).name("&aStaff Mode &7(Right Click)").getItem();
+//            player.getInventory().setItem(8, staffMode);
+//        }
     }
 
     /**
@@ -210,7 +221,7 @@ public class KitPvP extends JavaPlugin {
      *
      * @param kits Kit to load.
      */
-    private void loadKits(Kit... kits) {
+    private static void loadKits(Kit... kits) {
         for (Kit kit : kits) {
             KitManager.getInstance().registerKit(kit);
         }

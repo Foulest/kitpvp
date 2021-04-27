@@ -1,17 +1,17 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.menus.KitShop;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
+import net.foulest.kitpvp.menus.KitShop;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class KitShopCmd {
 
     private static final Regions REGIONS = Regions.getInstance();

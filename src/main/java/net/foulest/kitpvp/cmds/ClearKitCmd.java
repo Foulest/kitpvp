@@ -2,11 +2,11 @@ package net.foulest.kitpvp.cmds;
 
 import net.foulest.kitpvp.KitPvP;
 import net.foulest.kitpvp.listeners.CombatLog;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -14,13 +14,12 @@ import org.bukkit.potion.PotionEffect;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class ClearKitCmd {
 
     private static final String CLEAR_KIT_PERMISSION = "kitpvp.clearkit.others";
-    private static final CombatLog COMBAT_LOG = CombatLog.getInstance();
     private static final KitPvP KITPVP = KitPvP.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
 
@@ -36,7 +35,7 @@ public class ClearKitCmd {
 
         // Clearing your own kit.
         if (args.length() == 0) {
-            if (COMBAT_LOG.isInCombat(args.getPlayer())) {
+            if (CombatLog.isInCombat(args.getPlayer())) {
                 MessageUtil.messagePlayer(args.getPlayer(), "&cYou may not use this command while in combat.");
                 return;
             }
@@ -77,7 +76,7 @@ public class ClearKitCmd {
         }
     }
 
-    public void clearKit(PlayerData playerData) {
+    public static void clearKit(PlayerData playerData) {
         Player player = playerData.getPlayer();
 
         playerData.setPreviousKit(playerData.getKit());
@@ -91,7 +90,7 @@ public class ClearKitCmd {
             player.removePotionEffect(effect.getType());
         }
 
-        KITPVP.giveDefaultItems(player);
+        KitPvP.giveDefaultItems(player);
 
         player.playSound(player.getLocation(), Sound.SLIME_WALK, 1, 1);
     }

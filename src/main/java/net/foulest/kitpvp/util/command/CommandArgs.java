@@ -1,11 +1,10 @@
-package net.foulest.kitpvp.utils.command;
+package net.foulest.kitpvp.util.command;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public class CommandArgs {

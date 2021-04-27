@@ -1,4 +1,4 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public final class MessageUtil {

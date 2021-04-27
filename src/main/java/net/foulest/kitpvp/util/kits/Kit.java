@@ -1,8 +1,8 @@
-package net.foulest.kitpvp.utils.kits;
+package net.foulest.kitpvp.util.kits;
 
-import net.foulest.kitpvp.utils.ItemBuilder;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.PlayerData;
+import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.MessageUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -13,57 +13,42 @@ import java.util.List;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 public interface Kit {
 
     /**
      * The name of the kit.
-     *
-     * @return -
      */
     String getName();
 
     /**
      * The display item of the kit.
-     *
-     * @return -
      */
     ItemStack getDisplayItem();
 
     /**
      * The items of the kit.
-     *
-     * @return -
      */
     List<ItemStack> getItems();
 
     /**
      * The armor of the kit.
-     *
-     * @return -
      */
     ItemStack[] getArmor();
 
     /**
      * The potion effects of the kit.
-     *
-     * @return -
      */
     PotionEffect[] getPotionEffects();
 
     /**
      * The lore of the kit.
-     *
-     * @return -
      */
     List<String> getLore();
 
     /**
      * The cost of the kit in coins.
-     *
-     * @return -
      */
     int getCost();
 
@@ -121,17 +106,23 @@ public interface Kit {
             if (item.getType().toString().toLowerCase().contains("sword")
                     || item.getType().toString().toLowerCase().contains("cactus")
                     || item.getType().toString().toLowerCase().contains("axe")) {
-                if (player.hasMetadata("knockback")) {
+                if (playerData.isKnockbackEnchant()) {
                     item = new ItemBuilder(item).enchant(Enchantment.KNOCKBACK, 2).getItem();
                 }
 
-                if (player.hasMetadata("sharpness")) {
+                if (playerData.isSharpnessEnchant()) {
                     item = new ItemBuilder(item).enchant(Enchantment.DAMAGE_ALL, 2).getItem();
                 }
             }
 
-            if (item.getType().toString().toLowerCase().contains("bow") && player.hasMetadata("power")) {
-                item = new ItemBuilder(item).enchant(Enchantment.ARROW_DAMAGE, 2).getItem();
+            if (item.getType().toString().toLowerCase().contains("bow")) {
+                if (playerData.isPunchEnchant()) {
+                    item = new ItemBuilder(item).enchant(Enchantment.ARROW_KNOCKBACK, 2).getItem();
+                }
+
+                if (playerData.isPowerEnchant()) {
+                    item = new ItemBuilder(item).enchant(Enchantment.ARROW_DAMAGE, 2).getItem();
+                }
             }
 
             player.getInventory().setItem(i, item);
@@ -143,8 +134,26 @@ public interface Kit {
         ItemStack leggings = getArmor()[2];
         ItemStack boots = getArmor()[3];
 
-        if (player.hasMetadata("protection")) {
-            if (helmet != null && helmet.getType() != Material.AIR) {
+        if (playerData.isThornsEnchant()) {
+            if (helmet != null && helmet.getType() != Material.AIR && helmet.getType() != Material.SKULL_ITEM) {
+                helmet = new ItemBuilder(helmet).enchant(Enchantment.THORNS, 2).getItem();
+            }
+
+            if (chestplate != null && chestplate.getType() != Material.AIR) {
+                chestplate = new ItemBuilder(chestplate).enchant(Enchantment.THORNS, 2).getItem();
+            }
+
+            if (leggings != null && leggings.getType() != Material.AIR) {
+                leggings = new ItemBuilder(leggings).enchant(Enchantment.THORNS, 2).getItem();
+            }
+
+            if (boots != null && boots.getType() != Material.AIR) {
+                boots = new ItemBuilder(boots).enchant(Enchantment.THORNS, 2).getItem();
+            }
+        }
+
+        if (playerData.isProtectionEnchant()) {
+            if (helmet != null && helmet.getType() != Material.AIR && helmet.getType() != Material.SKULL_ITEM) {
                 helmet = new ItemBuilder(helmet).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).getItem();
             }
 
@@ -161,7 +170,7 @@ public interface Kit {
             }
         }
 
-        if (player.hasMetadata("featherFalling") && boots != null && boots.getType() != Material.AIR) {
+        if (playerData.isFeatherFallingEnchant() && boots != null && boots.getType() != Material.AIR) {
             boots = new ItemBuilder(boots).enchant(Enchantment.PROTECTION_FALL, 4).getItem();
         }
 

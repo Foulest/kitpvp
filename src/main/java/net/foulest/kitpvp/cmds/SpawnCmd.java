@@ -1,13 +1,13 @@
 package net.foulest.kitpvp.cmds;
 
 import net.foulest.kitpvp.KitPvP;
+import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.listeners.CombatLog;
-import net.foulest.kitpvp.utils.PlayerData;
-import net.foulest.kitpvp.utils.MessageUtil;
-import net.foulest.kitpvp.utils.Regions;
-import net.foulest.kitpvp.utils.Spawn;
-import net.foulest.kitpvp.utils.command.Command;
-import net.foulest.kitpvp.utils.command.CommandArgs;
+import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.region.Spawn;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.command.Command;
+import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -15,14 +15,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
+@SuppressWarnings("MethodMayBeStatic")
 public class SpawnCmd {
 
     private static final Spawn SPAWN = Spawn.getInstance();
     private static final KitPvP KITPVP = KitPvP.getInstance();
-    private static final CombatLog COMBAT_LOG = CombatLog.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
 
     @Command(name = "spawn", description = "Teleports you to spawn.", usage = "/spawn", inGameOnly = true)
@@ -31,7 +30,7 @@ public class SpawnCmd {
         Entity entityPlayer = player.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
-        if (COMBAT_LOG.isInCombat(player)) {
+        if (CombatLog.isInCombat(player)) {
             MessageUtil.messagePlayer(args.getPlayer(), "&cYou may not use this command while in combat.");
             return;
         }
@@ -48,7 +47,7 @@ public class SpawnCmd {
             return;
         }
 
-        if (playerData.getTeleportingToSpawn() == null) {
+        if (playerData.getTeleportingToSpawn() != null) {
             MessageUtil.messagePlayer(player, MessageUtil.colorize("&cYou are already teleporting to spawn."));
             return;
         }

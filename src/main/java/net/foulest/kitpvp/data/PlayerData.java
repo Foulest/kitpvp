@@ -1,12 +1,14 @@
-package net.foulest.kitpvp.utils;
+package net.foulest.kitpvp.data;
 
 import com.lunarclient.bukkitapi.LunarClientAPI;
 import com.lunarclient.bukkitapi.nethandler.client.LCPacketCooldown;
 import lombok.Getter;
 import lombok.Setter;
 import net.foulest.kitpvp.KitPvP;
-import net.foulest.kitpvp.utils.kits.Kit;
-import net.foulest.kitpvp.utils.kits.KitManager;
+import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.MySQL;
+import net.foulest.kitpvp.util.kits.Kit;
+import net.foulest.kitpvp.util.kits.KitManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -24,7 +26,6 @@ import java.util.*;
 
 /**
  * @author Foulest
- * @created 02/18/2021
  * @project KitPvP
  */
 @Getter
@@ -53,10 +54,14 @@ public final class PlayerData {
     private int topKillstreak;
     private int bounty;
     private UUID benefactor;
+    private boolean noFall;
     private boolean usingSoup;
     private boolean featherFallingEnchant;
+    private boolean thornsEnchant;
     private boolean protectionEnchant;
+    private boolean knockbackEnchant;
     private boolean sharpnessEnchant;
+    private boolean punchEnchant;
     private boolean powerEnchant;
     private boolean isLoaded;
     private boolean pendingNoFallRemoval;
@@ -73,9 +78,12 @@ public final class PlayerData {
      * Returns the player's PlayerData.
      */
     public static PlayerData getInstance(Player player) {
+        if (INSTANCES.isEmpty()) {
+            new PlayerData(player);
+        }
+
         for (PlayerData playerData : INSTANCES) {
-            if (playerData != null && playerData.getPlayer() != null && playerData.getPlayer().isOnline()
-                    && playerData.getPlayer().getName().equalsIgnoreCase(player.getName())) {
+            if (playerData.getPlayer().getUniqueId().equals(player.getUniqueId())) {
                 return playerData;
             }
         }
@@ -137,19 +145,33 @@ public final class PlayerData {
     }
 
     public void load() throws SQLException {
-        if (!MYSQL.exists("*", "PlayerStats", "uuid", "=", player.getUniqueId().toString())) {
-            MYSQL.update("INSERT INTO PlayerStats (uuid, coins, experience, kills, deaths, killstreak," +
+        // Inserts default values into PlayerStats.
+        if (!MySQL.exists("*", "PlayerStats", "uuid", "=", player.getUniqueId().toString())) {
+            MySQL.update("INSERT INTO PlayerStats (uuid, coins, experience, kills, deaths, killstreak," +
                     " topKillstreak, usingSoup, previousKit)" + " VALUES ('" + player.getUniqueId().toString()
                     + "', " + 500 + ", " + 0 + ", " + 0 + ", " + 0 + ", " + 0 + ", " + 0 + ", " + true + ", 'Knight')");
         }
 
-        if (!MYSQL.exists("*", "PlayerKits", "uuid", "=", player.getUniqueId().toString())) {
-            MYSQL.update("INSERT INTO PlayerKits (uuid, kitName) VALUES ('" + player.getUniqueId().toString() + "', 'Knight')");
+        // Loads values from PlayerStats.
+        setCoins((Integer) MySQL.get("coins", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setExperience((Integer) MySQL.get("experience", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setKills((Integer) MySQL.get("kills", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setDeaths((Integer) MySQL.get("deaths", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setKillstreak((Integer) MySQL.get("killstreak", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setTopKillstreak((Integer) MySQL.get("topKillstreak", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setUsingSoup((Boolean) MySQL.get("usingSoup", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
+        setPreviousKit(KIT_MANAGER.valueOf((String) MySQL.get("previousKit", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString())));
+
+        // Inserts default values into PlayerKits.
+        if (!MySQL.exists("*", "PlayerKits", "uuid", "=", player.getUniqueId().toString())) {
+            MySQL.update("INSERT INTO PlayerKits (uuid, kitName) VALUES ('" + player.getUniqueId().toString() + "', 'Knight')");
         } else {
+            // Loads values from PlayerKits.
             ResultSet result;
 
             try (Connection connection = KITPVP.getHikari().getConnection();
-                 PreparedStatement select = connection.prepareStatement("SELECT * FROM PlayerKits WHERE uuid='" + player.getUniqueId().toString() + "'")) {
+                 PreparedStatement select = connection.prepareStatement("SELECT * FROM PlayerKits WHERE uuid='"
+                         + player.getUniqueId().toString() + "'")) {
                 result = select.executeQuery();
 
                 while (result.next()) {
@@ -161,33 +183,50 @@ public final class PlayerData {
             }
         }
 
-        if (MYSQL.exists("*", "Bounties", "uuid", "=", player.getUniqueId().toString())) {
-            setBounty((Integer) MYSQL.get("bounty", "*", "Bounties", "uuid", "=", player.getUniqueId().toString()));
-            setBenefactor(UUID.fromString((String) MYSQL.get("benefactor", "*", "Bounties", "uuid", "=", player.getUniqueId().toString())));
+        // Loads values from Bounties.
+        if (MySQL.exists("*", "Bounties", "uuid", "=", player.getUniqueId().toString())) {
+            setBounty((Integer) MySQL.get("bounty", "*", "Bounties", "uuid", "=", player.getUniqueId().toString()));
+            setBenefactor(UUID.fromString((String) MySQL.get("benefactor", "*", "Bounties", "uuid", "=", player.getUniqueId().toString())));
         }
 
-        setCoins((Integer) MYSQL.get("coins", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setExperience((Integer) MYSQL.get("experience", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setKills((Integer) MYSQL.get("kills", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setDeaths((Integer) MYSQL.get("deaths", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setKillstreak((Integer) MYSQL.get("killstreak", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setTopKillstreak((Integer) MYSQL.get("topKillstreak", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setUsingSoup((Boolean) MYSQL.get("usingSoup", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString()));
-        setPreviousKit(KIT_MANAGER.valueOf((String) MYSQL.get("previousKit", "*", "PlayerStats", "uuid", "=", player.getUniqueId().toString())));
+        // Inserts default values into Enchants.
+        if (!MySQL.exists("*", "Enchants", "uuid", "=", player.getUniqueId().toString())) {
+            MySQL.update("INSERT INTO Enchants (uuid, featherFalling, thorns, protection, knockback, "
+                    + "sharpness, punch, power)" + " VALUES ('" + player.getUniqueId().toString()
+                    + "', " + false + ", " + false + ", " + false + ", " + false + ", " + false + ", " + false
+                    + ", " + false + ")");
+            setFeatherFallingEnchant(false);
+            setThornsEnchant(false);
+            setProtectionEnchant(false);
+            setKnockbackEnchant(false);
+            setSharpnessEnchant(false);
+            setPunchEnchant(false);
+            setPowerEnchant(false);
+
+        } else {
+            // Loads values from Enchants.
+            setFeatherFallingEnchant((Boolean) MySQL.get("featherFalling", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setThornsEnchant((Boolean) MySQL.get("thorns", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setProtectionEnchant((Boolean) MySQL.get("protection", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setKnockbackEnchant((Boolean) MySQL.get("knockback", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setSharpnessEnchant((Boolean) MySQL.get("sharpness", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setPunchEnchant((Boolean) MySQL.get("punch", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+            setPowerEnchant((Boolean) MySQL.get("power", "*", "Enchants", "uuid", "=", player.getUniqueId().toString()));
+        }
 
         isLoaded = true;
     }
 
     public void saveAll() {
         if (!ownedKits.isEmpty()) {
-            MYSQL.update("DELETE FROM PlayerKits WHERE uuid='" + player.getUniqueId().toString() + "'");
+            MySQL.update("DELETE FROM PlayerKits WHERE uuid='" + player.getUniqueId().toString() + "'");
 
             for (Kit kits : ownedKits) {
                 if (kits == null) {
                     continue;
                 }
 
-                MYSQL.update("INSERT INTO PlayerKits (uuid, kitName) VALUES ('" + player.getUniqueId().toString() + "', '" + kits.getName() + "');");
+                MySQL.update("INSERT INTO PlayerKits (uuid, kitName) VALUES ('" + player.getUniqueId().toString() + "', '" + kits.getName() + "');");
             }
         }
 
@@ -195,13 +234,28 @@ public final class PlayerData {
     }
 
     public void saveStats() {
-        MYSQL.update("UPDATE PlayerStats SET coins=" + coins + ", experience=" + experience
-                + ", kills=" + kills + ", deaths=" + deaths + ", killstreak=" + killstreak
-                + ", topKillstreak=" + topKillstreak + ", usingSoup=" + usingSoup
-                + ", previousKit='" + previousKit.getName() + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
-
-        MYSQL.update("UPDATE Bounties SET bounty=" + bounty + ", benefactor='" + benefactor
+        MySQL.update("UPDATE PlayerStats SET coins=" + coins
+                + ", experience=" + experience
+                + ", kills=" + kills
+                + ", deaths=" + deaths
+                + ", killstreak=" + killstreak
+                + ", topKillstreak=" + topKillstreak
+                + ", usingSoup=" + usingSoup
+                + ", previousKit='" + previousKit.getName()
                 + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
+
+        MySQL.update("UPDATE Bounties SET bounty=" + bounty
+                + ", benefactor='" + benefactor
+                + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
+
+        MySQL.update("UPDATE Enchants SET featherFalling=" + featherFallingEnchant
+                + ", thorns=" + thornsEnchant
+                + ", protection=" + protectionEnchant
+                + ", knockback=" + knockbackEnchant
+                + ", sharpness=" + sharpnessEnchant
+                + ", punch=" + punchEnchant
+                + ", power=" + powerEnchant
+                + " WHERE uuid='" + player.getUniqueId().toString() + "'");
     }
 
     public void addBounty(int bounty, UUID benefactor) {
@@ -212,7 +266,7 @@ public final class PlayerData {
         this.bounty = bounty;
         this.benefactor = benefactor;
 
-        MYSQL.update("INSERT INTO Bounties (uuid, bounty, benefactor) VALUES ('" + player.getUniqueId().toString() + "', " + bounty + ", '" + benefactor + "');");
+        MySQL.update("INSERT INTO Bounties (uuid, bounty, benefactor) VALUES ('" + player.getUniqueId().toString() + "', " + bounty + ", '" + benefactor + "');");
     }
 
     public void removeBounty() {
@@ -220,7 +274,7 @@ public final class PlayerData {
             bounty = 0;
             benefactor = null;
 
-            MYSQL.update("DELETE FROM Bounties WHERE uuid='" + player.getUniqueId().toString() + "'");
+            MySQL.update("DELETE FROM Bounties WHERE uuid='" + player.getUniqueId().toString() + "'");
         }
     }
 
@@ -229,7 +283,7 @@ public final class PlayerData {
         ownedKits.clear();
         kit = null;
         benefactor = null;
-        teleportingToSpawn = null;
+
         INSTANCES.remove(this);
     }
 
