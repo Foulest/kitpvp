@@ -8,7 +8,10 @@ import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.kits.*;
 import net.foulest.kitpvp.listeners.*;
 import net.foulest.kitpvp.region.Spawn;
-import net.foulest.kitpvp.util.*;
+import net.foulest.kitpvp.util.ConfigManager;
+import net.foulest.kitpvp.util.ItemBuilder;
+import net.foulest.kitpvp.util.PlaceholderUtil;
+import net.foulest.kitpvp.util.SkullCreatorUtil;
 import net.foulest.kitpvp.util.command.CommandFramework;
 import net.foulest.kitpvp.util.kits.Kit;
 import net.foulest.kitpvp.util.kits.KitManager;
@@ -36,6 +39,54 @@ public class KitPvP extends JavaPlugin {
 
     public static KitPvP getInstance() {
         return instance;
+    }
+
+    public static void giveDefaultItems(Player player) {
+        PlayerData playerData = PlayerData.getInstance(player);
+
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+
+        ItemStack kitSelector = new ItemBuilder(Material.NETHER_STAR).name("&aKit Selector &7(Right Click)").getItem();
+        player.getInventory().setItem(0, kitSelector);
+
+        ItemStack shopSelector = new ItemBuilder(Material.ENDER_CHEST).name("&aKit Shop &7(Right Click)").getItem();
+        player.getInventory().setItem(1, shopSelector);
+
+        ItemStack previousKit = new ItemBuilder(Material.WATCH).name("&aPrevious Kit &7(Right Click)").getItem();
+        player.getInventory().setItem(2, previousKit);
+
+        ItemStack yourStats = new ItemBuilder(SkullCreatorUtil.itemFromUuid(player.getUniqueId())).name("&aYour Stats &7(Right Click)").getItem();
+        player.getInventory().setItem(4, yourStats);
+
+        ItemStack healingItem;
+        if (playerData.isUsingSoup()) {
+            healingItem = new ItemBuilder(Material.MUSHROOM_SOUP).name("&aUsing Soup &7(Right Click)").getItem();
+        } else {
+            healingItem = new ItemBuilder(Material.POTION).hideInfo().durability(16421).name("&aUsing Potions &7(Right Click)").getItem();
+        }
+        player.getInventory().setItem(6, healingItem);
+
+        ItemStack kitEnchanter = new ItemBuilder(Material.ENCHANTED_BOOK).name("&aKit Enchanter &7(Right Click)").getItem();
+        player.getInventory().setItem(7, kitEnchanter);
+
+        player.updateInventory();
+
+//        if (player.hasPermission("KitPvP.staff")) {
+//            ItemStack staffMode = new ItemBuilder(Material.EYE_OF_ENDER).name("&aStaff Mode &7(Right Click)").getItem();
+//            player.getInventory().setItem(8, staffMode);
+//        }
+    }
+
+    /**
+     * Loads the plugin's kits.
+     *
+     * @param kits Kit to load.
+     */
+    private static void loadKits(Kit... kits) {
+        for (Kit kit : kits) {
+            KitManager.getInstance().registerKit(kit);
+        }
     }
 
     @Override
@@ -157,43 +208,6 @@ public class KitPvP extends JavaPlugin {
         Bukkit.getLogger().info("[KitPvP] Shut down successfully.");
     }
 
-    public static void giveDefaultItems(Player player) {
-        PlayerData playerData = PlayerData.getInstance(player);
-
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(null);
-
-        ItemStack kitSelector = new ItemBuilder(Material.NETHER_STAR).name("&aKit Selector &7(Right Click)").getItem();
-        player.getInventory().setItem(0, kitSelector);
-
-        ItemStack shopSelector = new ItemBuilder(Material.ENDER_CHEST).name("&aKit Shop &7(Right Click)").getItem();
-        player.getInventory().setItem(1, shopSelector);
-
-        ItemStack previousKit = new ItemBuilder(Material.WATCH).name("&aPrevious Kit &7(Right Click)").getItem();
-        player.getInventory().setItem(2, previousKit);
-
-        ItemStack yourStats = new ItemBuilder(SkullCreatorUtil.itemFromUuid(player.getUniqueId())).name("&aYour Stats &7(Right Click)").getItem();
-        player.getInventory().setItem(4, yourStats);
-
-        ItemStack healingItem;
-        if (playerData.isUsingSoup()) {
-            healingItem = new ItemBuilder(Material.MUSHROOM_SOUP).name("&aUsing Soup &7(Right Click)").getItem();
-        } else {
-            healingItem = new ItemBuilder(Material.POTION).hideInfo().durability(16421).name("&aUsing Potions &7(Right Click)").getItem();
-        }
-        player.getInventory().setItem(6, healingItem);
-
-        ItemStack kitEnchanter = new ItemBuilder(Material.ENCHANTED_BOOK).name("&aKit Enchanter &7(Right Click)").getItem();
-        player.getInventory().setItem(7, kitEnchanter);
-
-        player.updateInventory();
-
-//        if (player.hasPermission("KitPvP.staff")) {
-//            ItemStack staffMode = new ItemBuilder(Material.EYE_OF_ENDER).name("&aStaff Mode &7(Right Click)").getItem();
-//            player.getInventory().setItem(8, staffMode);
-//        }
-    }
-
     /**
      * Loads the plugin's listeners.
      *
@@ -213,17 +227,6 @@ public class KitPvP extends JavaPlugin {
     private void loadCommands(Object... commands) {
         for (Object command : commands) {
             framework.registerCommands(command);
-        }
-    }
-
-    /**
-     * Loads the plugin's kits.
-     *
-     * @param kits Kit to load.
-     */
-    private static void loadKits(Kit... kits) {
-        for (Kit kit : kits) {
-            KitManager.getInstance().registerKit(kit);
         }
     }
 }

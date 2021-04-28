@@ -1,10 +1,10 @@
 package net.foulest.kitpvp.listeners;
 
 import net.foulest.kitpvp.KitPvP;
-import net.foulest.kitpvp.kits.*;
-import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.kits.*;
 import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.util.kits.Kit;
 import org.bukkit.*;
 import org.bukkit.block.Block;

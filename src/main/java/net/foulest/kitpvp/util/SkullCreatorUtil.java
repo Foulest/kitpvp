@@ -154,7 +154,7 @@ public final class SkullCreatorUtil {
             throw new RuntimeException(var3);
         }
 
-        String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl.toString() + "\"}}}";
+        String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl + "\"}}}";
 
         return Base64.getEncoder().encodeToString(toEncode.getBytes());
     }

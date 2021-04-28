@@ -1,10 +1,10 @@
 package net.foulest.kitpvp.cmds;
 
 import net.foulest.kitpvp.KitPvP;
-import net.foulest.kitpvp.listeners.CombatLog;
-import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.listeners.CombatLog;
 import net.foulest.kitpvp.region.Regions;
+import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.util.command.Command;
 import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Bukkit;
@@ -22,6 +22,25 @@ public class ClearKitCmd {
     private static final String CLEAR_KIT_PERMISSION = "kitpvp.clearkit.others";
     private static final KitPvP KITPVP = KitPvP.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
+
+    public static void clearKit(PlayerData playerData) {
+        Player player = playerData.getPlayer();
+
+        playerData.setPreviousKit(playerData.getKit());
+        playerData.clearCooldowns();
+        playerData.setKit(null);
+
+        player.setHealth(20);
+        player.getInventory().setHeldItemSlot(0);
+
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
+
+        KitPvP.giveDefaultItems(player);
+
+        player.playSound(player.getLocation(), Sound.SLIME_WALK, 1, 1);
+    }
 
     @Command(name = "clearkit", description = "Clears your kit.", usage = "/clearkit", inGameOnly = true)
     public void onCommand(CommandArgs args) {
@@ -74,24 +93,5 @@ public class ClearKitCmd {
             MessageUtil.messagePlayer(target, "&aYour kit has been cleared by a staff member.");
             MessageUtil.messagePlayer(sender, "&aYou cleared " + target.getName() + "'s kit.");
         }
-    }
-
-    public static void clearKit(PlayerData playerData) {
-        Player player = playerData.getPlayer();
-
-        playerData.setPreviousKit(playerData.getKit());
-        playerData.clearCooldowns();
-        playerData.setKit(null);
-
-        player.setHealth(20);
-        player.getInventory().setHeldItemSlot(0);
-
-        for (PotionEffect effect : player.getActivePotionEffects()) {
-            player.removePotionEffect(effect.getType());
-        }
-
-        KitPvP.giveDefaultItems(player);
-
-        player.playSound(player.getLocation(), Sound.SLIME_WALK, 1, 1);
     }
 }

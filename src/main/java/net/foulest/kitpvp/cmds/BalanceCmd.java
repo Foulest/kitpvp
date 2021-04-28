@@ -1,7 +1,7 @@
 package net.foulest.kitpvp.cmds;
 
-import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.util.command.Command;
 import net.foulest.kitpvp.util.command.CommandArgs;
 import org.bukkit.Bukkit;

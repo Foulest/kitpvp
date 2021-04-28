@@ -1,8 +1,8 @@
 package net.foulest.kitpvp.menus;
 
+import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.util.ItemBuilder;
 import net.foulest.kitpvp.util.MessageUtil;
-import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.util.kits.Kit;
 import net.foulest.kitpvp.util.kits.KitManager;
 import org.bukkit.Bukkit;
@@ -67,6 +67,24 @@ public class KitShop {
         return ensureSize(++size);
     }
 
+    private static int ensureKits(int size) {
+        return (Math.min(size, 36));
+    }
+
+    private static ItemStack createKitItem(Kit kit) {
+        List<String> lore = kit.getLore();
+
+        if (kit.getCost() == 0) {
+            lore.add(1, "&7Cost: &fFree");
+        } else {
+            lore.add(1, "&7Cost: &f" + kit.getCost() + " coins");
+        }
+
+        lore.add("");
+        lore.add("&aClick to purchase this kit.");
+        return new ItemBuilder(kit.getDisplayItem()).name("&c" + kit.getName()).lore(lore).getItem();
+    }
+
     private boolean populateInventory(Player player, int page) {
         PlayerData playerData = PlayerData.getInstance(player);
         ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name(" ").getItem();
@@ -108,23 +126,5 @@ public class KitShop {
         }
 
         return paidKits != 0;
-    }
-
-    private static int ensureKits(int size) {
-        return (Math.min(size, 36));
-    }
-
-    private static ItemStack createKitItem(Kit kit) {
-        List<String> lore = kit.getLore();
-
-        if (kit.getCost() == 0) {
-            lore.add(1, "&7Cost: &fFree");
-        } else {
-            lore.add(1, "&7Cost: &f" + kit.getCost() + " coins");
-        }
-
-        lore.add("");
-        lore.add("&aClick to purchase this kit.");
-        return new ItemBuilder(kit.getDisplayItem()).name("&c" + kit.getName()).lore(lore).getItem();
     }
 }
