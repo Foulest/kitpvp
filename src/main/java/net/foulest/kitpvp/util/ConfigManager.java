@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author Kody Simpson
+ * @author Kody Simpson, Foulest
  * @project KitPvP
  *
  * https://snippets.cacher.io/snippet/e1f3bdc29b1739dc374c
