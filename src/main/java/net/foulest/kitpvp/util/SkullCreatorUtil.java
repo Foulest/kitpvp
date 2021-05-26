@@ -19,8 +19,10 @@ import java.util.Base64;
 import java.util.UUID;
 
 /**
- * @author Foulest
+ * @author deanveloper
  * @project KitPvP
+ *
+ * https://github.com/deanveloper/SkullCreator
  */
 public final class SkullCreatorUtil {
 

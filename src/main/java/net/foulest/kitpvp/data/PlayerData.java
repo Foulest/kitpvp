@@ -27,6 +27,8 @@ import java.util.*;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Main class for storing player data.
  */
 @Getter
 @Setter

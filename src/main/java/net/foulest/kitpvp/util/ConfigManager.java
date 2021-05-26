@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author Foulest
+ * @author Kody Simpson
  * @project KitPvP
+ *
+ * https://snippets.cacher.io/snippet/e1f3bdc29b1739dc374c
  */
 @SuppressWarnings({"ResultOfMethodCallIgnored"})
 public final class ConfigManager {

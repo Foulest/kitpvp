@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for setting a player's coins.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class EcoSetCmd {
 
-    @Command(name = "ecoset", description = "Sets the balance of a player.", usage = "/ecoset <player> <amount>",
-            permission = "kitpvp.ecoset")
+    @Command(name = "ecoset", description = "Sets the balance of a player.",
+            usage = "/ecoset <player> <amount>", permission = "kitpvp.ecoset")
     public void onCommand(CommandArgs args) {
         if (args.length() != 2) {
             MessageUtil.messagePlayer(args.getSender(), "&cUsage: /ecoset <player> <amount>");

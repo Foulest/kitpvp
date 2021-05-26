@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for displaying your current combat tag timer.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class CombatLogCmd {

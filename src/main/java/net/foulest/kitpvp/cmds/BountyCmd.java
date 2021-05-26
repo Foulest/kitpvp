@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for setting bounties on players, and checking your bounty status.
+ * Some part of this is locked behind a paywall (permissions based).
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class BountyCmd {
 
     private static final String SET_NAME = "set";
-    private static final String BOUNTIES_PERMISSION = "kitpvp.bounties";
 
     @Command(name = "bounty", aliases = {"bounties"}, description = "Shows your current balance.",
             usage = "/bounty [player]", inGameOnly = true)
@@ -38,7 +40,7 @@ public class BountyCmd {
 
             MessageUtil.messagePlayer(player, "");
 
-            if (player.hasPermission(BOUNTIES_PERMISSION)) {
+            if (player.hasPermission("kitpvp.bounties")) {
                 MessageUtil.messagePlayer(player, " &fYou can place one on another player");
                 MessageUtil.messagePlayer(player, " &fusing &e/bounty set <player> <amount>&f.");
             } else {

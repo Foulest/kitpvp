@@ -12,6 +12,9 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for opening the Kit Selector menu.
+ * Also for applying specific kits.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class KitsCmd {

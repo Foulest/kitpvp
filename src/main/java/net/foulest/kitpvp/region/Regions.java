@@ -21,6 +21,8 @@ import java.util.Map;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Handles regions
  */
 @Getter
 public class Regions {

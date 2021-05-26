@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Sets up placeholders with PlaceholderAPI
  */
 public class PlaceholderUtil extends PlaceholderExpansion {
 
@@ -23,7 +25,7 @@ public class PlaceholderUtil extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return "1.1.1";
+        return "1.1.2";
     }
 
     @Override

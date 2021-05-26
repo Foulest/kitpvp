@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for opening the Kit Shop menu.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class KitShopCmd {

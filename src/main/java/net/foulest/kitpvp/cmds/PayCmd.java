@@ -12,11 +12,11 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for sending coins to other players.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class PayCmd {
-
-    private static final String NEGATIVE = "-";
 
     @Command(name = "pay", description = "Send coins to another player.", usage = "/pay <player> <amount>",
             inGameOnly = true)
@@ -29,14 +29,14 @@ public class PayCmd {
                 return;
             }
 
-            String amount = args.getArgs(1);
-
-            if (!StringUtils.isNumeric(amount)) {
-                MessageUtil.messagePlayer(args.getSender(), "&c'" + amount + "' is not a valid amount.");
+            if (!StringUtils.isNumeric(args.getArgs(1))) {
+                MessageUtil.messagePlayer(args.getSender(), "&c'" + args.getArgs(1) + "' is not a valid amount.");
                 return;
             }
 
-            if (amount.contains(NEGATIVE)) {
+            int amount = Integer.parseInt(args.getArgs(1));
+
+            if (amount < 0) {
                 MessageUtil.messagePlayer(args.getPlayer(), "&cThe amount must be positive.");
                 return;
             }
@@ -45,15 +45,15 @@ public class PayCmd {
             Player sender = (Player) args.getSender();
             PlayerData targetData = PlayerData.getInstance(target);
             PlayerData senderData = PlayerData.getInstance(sender);
-            int check = senderData.getCoins() - Integer.parseInt(amount);
+            int check = senderData.getCoins() - amount;
 
             if (check <= 0) {
                 MessageUtil.messagePlayer(sender, "&cYou don't have enough coins.");
                 return;
             }
 
-            targetData.setCoins(targetData.getCoins() + Integer.parseInt(amount));
-            senderData.removeCoins(Integer.parseInt(amount));
+            targetData.setCoins(targetData.getCoins() + amount);
+            senderData.removeCoins(amount);
             targetData.saveStats();
 
             if ((args.getSender() instanceof Player) && target == args.getSender()) {

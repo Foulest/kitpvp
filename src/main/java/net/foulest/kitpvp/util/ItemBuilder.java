@@ -15,8 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Foulest
+ * @author nonamesldev
  * @project KitPvP
+ *
+ * https://www.spigotmc.org/threads/util-itembuilder-manage-items-easily.48397/
  */
 @Getter
 @AllArgsConstructor

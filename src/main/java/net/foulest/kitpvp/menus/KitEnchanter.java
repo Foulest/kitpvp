@@ -14,6 +14,8 @@ import java.util.Arrays;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Inventory for Kit Enchanter
  */
 public class KitEnchanter {
 

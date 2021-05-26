@@ -9,8 +9,10 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 
 /**
- * @author Foulest
+ * @author minnymin3
  * @project KitPvP
+ *
+ * https://github.com/mcardy/CommandFramework
  */
 public class BukkitCommand extends org.bukkit.command.Command {
 

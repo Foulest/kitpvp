@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for displaying a player's statistics.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class StatsCmd {

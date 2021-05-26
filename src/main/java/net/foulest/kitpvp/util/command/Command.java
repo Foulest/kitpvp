@@ -6,8 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Foulest
+ * @author minnymin3
  * @project KitPvP
+ *
+ * https://github.com/mcardy/CommandFramework
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

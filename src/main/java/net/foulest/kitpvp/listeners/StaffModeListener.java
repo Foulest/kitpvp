@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Hooks into very specific staff mode plugin I made.
+ * Safe to remove.
  */
 public class StaffModeListener implements Listener {
 

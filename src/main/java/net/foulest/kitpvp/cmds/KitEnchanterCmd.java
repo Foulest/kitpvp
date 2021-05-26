@@ -8,6 +8,8 @@ import net.foulest.kitpvp.util.command.CommandArgs;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for opening the Kit Enchanter menu.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class KitEnchanterCmd {

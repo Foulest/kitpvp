@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for setting your healing item to Soup.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class SoupCmd {

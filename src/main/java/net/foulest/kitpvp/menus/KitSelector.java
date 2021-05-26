@@ -18,6 +18,8 @@ import java.util.Map;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Inventory for Kit Selector
  */
 public class KitSelector {
 

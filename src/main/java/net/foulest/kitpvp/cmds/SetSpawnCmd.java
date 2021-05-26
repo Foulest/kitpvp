@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for setting the server's spawn point.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class SetSpawnCmd {

@@ -15,12 +15,13 @@ import org.bukkit.potion.PotionEffect;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for setting bounties on players, and checking your bounty status.
+ * Some part of this is locked behind a paywall (permissions based).
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class ClearKitCmd {
 
-    private static final String CLEAR_KIT_PERMISSION = "kitpvp.clearkit.others";
-    private static final KitPvP KITPVP = KitPvP.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
 
     public static void clearKit(PlayerData playerData) {
@@ -75,7 +76,7 @@ public class ClearKitCmd {
         }
 
         // Clearing kits from other players.
-        if (args.getPlayer().hasPermission(CLEAR_KIT_PERMISSION)) {
+        if (args.getPlayer().hasPermission("kitpvp.clearkit.others")) {
             Player target = Bukkit.getPlayer(args.getArgs(1));
 
             if (target == null) {

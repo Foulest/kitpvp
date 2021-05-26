@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for taking coins away from players.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class EcoTakeCmd {
 
-    @Command(name = "ecotake", description = "Takes from the balance of a player.", usage = "/ecotake <player> <amount>",
-            permission = "kitpvp.ecotake")
+    @Command(name = "ecotake", description = "Takes from the balance of a player.",
+            usage = "/ecotake <player> <amount>", permission = "kitpvp.ecotake")
     public void onCommand(CommandArgs args) {
         if (args.length() != 2) {
             MessageUtil.messagePlayer(args.getSender(), "&cUsage: /ecotake <player> <amount>");

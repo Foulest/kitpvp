@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Handles the spawn point
  */
 @Getter
 public class Spawn {

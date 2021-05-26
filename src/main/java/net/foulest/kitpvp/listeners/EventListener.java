@@ -40,6 +40,8 @@ import java.sql.SQLException;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Handles all server events
  */
 public class EventListener implements Listener {
 

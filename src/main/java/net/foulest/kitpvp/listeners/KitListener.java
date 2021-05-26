@@ -30,6 +30,8 @@ import java.util.*;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Handles all kit abilities
  */
 public class KitListener implements Listener {
 

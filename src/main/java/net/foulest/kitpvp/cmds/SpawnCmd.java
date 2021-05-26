@@ -16,6 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Command for teleporting to spawn.
  */
 @SuppressWarnings("MethodMayBeStatic")
 public class SpawnCmd {

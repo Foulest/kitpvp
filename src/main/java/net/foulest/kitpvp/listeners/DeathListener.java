@@ -22,6 +22,8 @@ import org.bukkit.util.Vector;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Handles all deaths
  */
 public class DeathListener implements Listener {
 

@@ -15,6 +15,8 @@ import java.util.*;
 /**
  * @author Foulest
  * @project KitPvP
+ *
+ * Combat tag/log handling
  */
 public class CombatLog {
 
