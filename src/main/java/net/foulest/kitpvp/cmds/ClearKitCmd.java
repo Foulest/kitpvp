@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for setting bounties on players, and checking your bounty status.
  * Some part of this is locked behind a paywall (permissions based).
  */
@@ -50,8 +50,13 @@ public class ClearKitCmd {
             return;
         }
 
-        Player sender = args.getPlayer();
-        PlayerData playerData = PlayerData.getInstance(sender);
+        Player player = args.getPlayer();
+        PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         // Clearing your own kit.
         if (args.length() == 0) {
@@ -60,31 +65,36 @@ public class ClearKitCmd {
                 return;
             }
 
-            if (REGIONS.isInSafezone(sender)) {
+            if (REGIONS.isInSafezone(player.getLocation())) {
                 if (playerData.getKit() == null) {
-                    MessageUtil.messagePlayer(sender, "&cYou do not have a kit selected.");
+                    MessageUtil.messagePlayer(player, "&cYou do not have a kit selected.");
                     return;
                 }
 
                 clearKit(playerData);
-                MessageUtil.messagePlayer(sender, "&aYour kit has been cleared.");
+                MessageUtil.messagePlayer(player, "&aYour kit has been cleared.");
                 return;
             }
 
-            MessageUtil.messagePlayer(sender, "&cYou need to be in spawn to clear your kit.");
+            MessageUtil.messagePlayer(player, "&cYou need to be in spawn to clear your kit.");
             return;
         }
 
         // Clearing kits from other players.
         if (args.getPlayer().hasPermission("kitpvp.clearkit.others")) {
             Player target = Bukkit.getPlayer(args.getArgs(1));
+            PlayerData targetData = PlayerData.getInstance(target);
 
             if (target == null) {
-                MessageUtil.messagePlayer(sender, "&cThat player is not online.");
+                MessageUtil.messagePlayer(player, "&cThat player is not online.");
                 return;
             }
 
-            PlayerData targetData = PlayerData.getInstance(target);
+            if (targetData == null) {
+                target.kickPlayer("Disconnected");
+                return;
+            }
+
             if (targetData.getKit() == null) {
                 MessageUtil.messagePlayer(target, "&cYou do not have a kit selected.");
                 return;
@@ -92,7 +102,7 @@ public class ClearKitCmd {
 
             clearKit(targetData);
             MessageUtil.messagePlayer(target, "&aYour kit has been cleared by a staff member.");
-            MessageUtil.messagePlayer(sender, "&aYou cleared " + target.getName() + "'s kit.");
+            MessageUtil.messagePlayer(player, "&aYou cleared " + target.getName() + "'s kit.");
         }
     }
 }

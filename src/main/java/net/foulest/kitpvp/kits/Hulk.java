@@ -38,23 +38,23 @@ public class Hulk implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).getItem();
-        ItemStack special = new ItemBuilder(Material.PISTON_STICKY_BASE).name("&aHulk Smash &7(Right Click)")
-                .lore("&7Deals players immense knockback.").getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).hideInfo();
+        ItemBuilder special = new ItemBuilder(Material.PISTON_STICKY_BASE).name("&aHulk Smash &7(Right Click)")
+                .lore("&7Deals players immense knockback.");
         return Arrays.asList(sword, special);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZ"
                 + "GJhMTIwZTM3MjdkZDc3MDY2Mjk3MThhNTE3MTI1YjFkNTgwNWZmYTUxM2E3ZDcxZmYyMmRiYTg4NjRmZWMzMSJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fHulk's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x3E7F2B)).unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_BOOTS).color(Color.fromRGB(0x3E7F2B)).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fHulk's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo().color(Color.fromRGB(0x3E7F2B)),
+                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.LEATHER_BOOTS).unbreakable(true).hideInfo().color(Color.fromRGB(0x3E7F2B))
         };
     }
 

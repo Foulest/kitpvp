@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Hooks into very specific staff mode plugin I made.
  * Safe to remove.
  */
@@ -24,6 +24,11 @@ public class StaffModeListener implements Listener {
     public static void onStaffMode(StaffModeEvent event) {
         Player player = Bukkit.getPlayer(event.getUUID());
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         if (event.isInStaffMode()) {
             playerData.setKit(null);

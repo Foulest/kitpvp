@@ -34,21 +34,21 @@ public class Tank implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack weapon = new ItemBuilder(Material.STONE_AXE).unbreakable(true).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder weapon = new ItemBuilder(Material.STONE_AXE).unbreakable(true).hideInfo();
         return Collections.singletonList(weapon);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYT"
                 + "Y1OWIyYmIwNzBjMTIwOGJhNTE0NTIzNjFmZDMwYTY2NzIxMzI5NWYyMWRiNDM3ZGY1NzI4MWQ1ODJjODlhZCJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fTank's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_CHESTPLATE).unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fTank's Head"),
+                new ItemBuilder(Material.DIAMOND_CHESTPLATE).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.DIAMOND_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

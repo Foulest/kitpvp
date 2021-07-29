@@ -35,23 +35,23 @@ public class Monk implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).getItem();
-        ItemStack special = new ItemBuilder(Material.BLAZE_ROD).name("&aItem Scrambler &7(Right Click)")
-                .lore("&7Scrambles a player's hotbar items.").getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).hideInfo();
+        ItemBuilder special = new ItemBuilder(Material.BLAZE_ROD).name("&aItem Scrambler &7(Right Click)")
+                .lore("&7Scrambles a player's hotbar items.");
         return Arrays.asList(sword, special);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY"
                 + "WM5NmY3NWY2YWQ2ZTZhNjNhNWY3ZmI3ZTVkNWE5MmI4NmI4MzI2MmQyNzgzZThlMjBiMWZkZDA2NDlmNjllIn19fQ==";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fMonk's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.ORANGE).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fMonk's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo().color(Color.ORANGE),
+                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

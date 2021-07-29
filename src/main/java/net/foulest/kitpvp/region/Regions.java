@@ -13,7 +13,6 @@ import net.minecraft.server.v1_8_R3.AxisAlignedBB;
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.Vec3D;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +20,7 @@ import java.util.Map;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Handles regions
  */
 @Getter
@@ -48,30 +47,13 @@ public class Regions {
         regionMap = regionManager.getRegions();
     }
 
-    public boolean isInSafezone(Player player) {
-        for (Map.Entry<String, ProtectedRegion> regions : getRegionMap().entrySet()) {
-            ProtectedRegion region = regions.getValue();
-            BlockVector regionMin = region.getMinimumPoint();
-            BlockVector regionMax = region.getMaximumPoint();
-            AxisAlignedBB regionZone = new AxisAlignedBB(new BlockPosition(regionMin.getX(), regionMin.getY(), regionMin.getZ()),
-                    new BlockPosition(regionMax.getX(), regionMax.getY(), regionMax.getZ()));
-            Vec3D vec3D = new Vec3D(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
-
-            if (regionZone.a(vec3D) && region.getFlag(DefaultFlag.PVP) == StateFlag.State.DENY) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public boolean isInSafezone(Location loc) {
         for (Map.Entry<String, ProtectedRegion> regions : getRegionMap().entrySet()) {
             ProtectedRegion region = regions.getValue();
             BlockVector regionMin = region.getMinimumPoint();
             BlockVector regionMax = region.getMaximumPoint();
             AxisAlignedBB regionZone = new AxisAlignedBB(new BlockPosition(regionMin.getX(), regionMin.getY(), regionMin.getZ()),
-                    new BlockPosition(regionMax.getX(), regionMax.getY(), regionMax.getZ()));
+                    new BlockPosition((regionMax.getX() + 1), regionMax.getY(), (regionMax.getZ() + 1)));
             Vec3D vec3D = new Vec3D(loc.getX(), loc.getY(), loc.getZ());
 
             if (regionZone.a(vec3D) && region.getFlag(DefaultFlag.PVP) == StateFlag.State.DENY) {

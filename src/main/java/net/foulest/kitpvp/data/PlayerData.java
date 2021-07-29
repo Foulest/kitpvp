@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Main class for storing player data.
  */
 @Getter
@@ -36,13 +36,13 @@ import java.util.*;
 public final class PlayerData {
 
     private static final Set<PlayerData> INSTANCES = new HashSet<>();
-    private static final Map<Kit, Long> COOLDOWNS = new HashMap<>();
     private static final KitPvP KITPVP = KitPvP.getInstance();
     private static final MySQL MYSQL = MySQL.getInstance();
     private static final LunarClientAPI LUNAR_API = LunarClientAPI.getInstance();
     private static final KitManager KIT_MANAGER = KitManager.getInstance();
     private final Player player;
     private final List<Kit> ownedKits = new ArrayList<>();
+    private Map<Kit, Long> cooldowns = new HashMap<>();
     private BukkitTask abilityCooldownNotifier;
     private BukkitTask teleportingToSpawn;
     private Kit kit;
@@ -85,6 +85,11 @@ public final class PlayerData {
         }
 
         for (PlayerData playerData : INSTANCES) {
+            if (playerData == null || playerData.getPlayer() == null || playerData.getPlayer().getUniqueId() == null
+                    || player == null || player.getUniqueId() == null) {
+                return null;
+            }
+
             if (playerData.getPlayer().getUniqueId().equals(player.getUniqueId())) {
                 return playerData;
             }
@@ -98,7 +103,7 @@ public final class PlayerData {
      * the kit they have equipped.
      */
     public boolean hasCooldown(boolean sendMessage) {
-        long cooldown = COOLDOWNS.containsKey(kit) ? (COOLDOWNS.get(kit) - System.currentTimeMillis()) : 0L;
+        long cooldown = cooldowns.containsKey(kit) ? (cooldowns.get(kit) - System.currentTimeMillis()) : 0L;
 
         if (cooldown > 0) {
             if (sendMessage) {
@@ -116,7 +121,7 @@ public final class PlayerData {
      * Clears a player's cooldowns for their kit.
      */
     public void clearCooldowns() {
-        COOLDOWNS.clear();
+        cooldowns.clear();
 
         if (getKit() != null && LUNAR_API.isRunningLunarClient(player)) {
             LUNAR_API.sendPacket(player, new LCPacketCooldown("Ability", 0L, getKit().getDisplayItem().getType().getId()));
@@ -129,7 +134,7 @@ public final class PlayerData {
     }
 
     public void setCooldown(Kit kit, Material icon, int cooldownTime, boolean notify) {
-        COOLDOWNS.put(kit, System.currentTimeMillis() + cooldownTime * 1000L);
+        cooldowns.put(kit, System.currentTimeMillis() + cooldownTime * 1000L);
 
         if (getKit() != null && LUNAR_API.isRunningLunarClient(player)) {
             LUNAR_API.sendPacket(player, new LCPacketCooldown("Ability", cooldownTime * 1000L, icon.getId()));
@@ -140,7 +145,7 @@ public final class PlayerData {
                 @Override
                 public void run() {
                     MessageUtil.messagePlayer(player, MessageUtil.colorize("&aYour ability cooldown has expired."));
-                    COOLDOWNS.remove(kit);
+                    cooldowns.remove(kit);
                 }
             }.runTaskLater(KITPVP, cooldownTime * 20L);
         }
@@ -323,6 +328,10 @@ public final class PlayerData {
     }
 
     public void addExperience(int exp) {
+        if (exp == 0) {
+            return;
+        }
+
         experience += exp;
         calcLevel(true);
     }
@@ -370,8 +379,7 @@ public final class PlayerData {
                     MessageUtil.messagePlayer(player, " &b&lLevel Up");
                     MessageUtil.messagePlayer(player, " &7You leveled up to &fLevel " + level + " &7and");
                     MessageUtil.messagePlayer(player, " &7earned yourself &f250 Coins&7!");
-                    MessageUtil.messagePlayer(player, "");
-                    setCoins(getCoins() + 150);
+                    setCoins(getCoins() + 250);
                 }
             }
         }
@@ -381,6 +389,18 @@ public final class PlayerData {
     }
 
     public void removeCoins(int coins) {
+        if (coins == 0) {
+            return;
+        }
+
         this.coins = Math.max(0, this.coins - coins);
+    }
+
+    public void addCoins(int coins) {
+        if (coins == 0) {
+            return;
+        }
+
+        this.coins += coins;
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for taking coins away from players.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -26,9 +26,15 @@ public class EcoTakeCmd {
         }
 
         Player target = Bukkit.getPlayer(args.getArgs(0));
+        PlayerData targetData = PlayerData.getInstance(target);
 
         if (target == null) {
             MessageUtil.messagePlayer(args.getSender(), args.getArgs(0) + " is not online.");
+            return;
+        }
+
+        if (targetData == null) {
+            target.kickPlayer("Disconnected");
             return;
         }
 
@@ -37,7 +43,6 @@ public class EcoTakeCmd {
             return;
         }
 
-        PlayerData targetData = PlayerData.getInstance(target);
         int amount = Integer.parseInt(args.getArgs(1));
 
         targetData.removeCoins(amount);

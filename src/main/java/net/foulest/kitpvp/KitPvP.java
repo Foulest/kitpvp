@@ -8,9 +8,9 @@ import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.kits.*;
 import net.foulest.kitpvp.listeners.*;
 import net.foulest.kitpvp.region.Spawn;
-import net.foulest.kitpvp.util.ConfigManager;
 import net.foulest.kitpvp.util.ItemBuilder;
 import net.foulest.kitpvp.util.PlaceholderUtil;
+import net.foulest.kitpvp.util.Settings;
 import net.foulest.kitpvp.util.SkullCreatorUtil;
 import net.foulest.kitpvp.util.command.CommandFramework;
 import net.foulest.kitpvp.util.kits.Kit;
@@ -25,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Objects;
 
 /**
  * @author Foulest
@@ -43,6 +44,11 @@ public class KitPvP extends JavaPlugin {
 
     public static void giveDefaultItems(Player player) {
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
@@ -99,35 +105,20 @@ public class KitPvP extends JavaPlugin {
         Bukkit.getLogger().info("[KitPvP] - Loading Placeholders...");
         new PlaceholderUtil().register();
 
-        // Creates the default config.
-        Bukkit.getLogger().info("[KitPvP] - Loading Config...");
-        ConfigManager.setup();
-        ConfigManager.get().addDefault("spawn.world", "world");
-        ConfigManager.get().addDefault("spawn.x", 0.5);
-        ConfigManager.get().addDefault("spawn.y", 64.0);
-        ConfigManager.get().addDefault("spawn.z", 0.5);
-        ConfigManager.get().addDefault("spawn.yaw", 90.0);
-        ConfigManager.get().addDefault("spawn.pitch", 0.0);
-        ConfigManager.get().addDefault("kill.coins-bonus", 10);
-        ConfigManager.get().addDefault("kill.experience-bonus", 25);
-        ConfigManager.get().addDefault("kill.killstreak-bonus", 5);
-        ConfigManager.get().addDefault("mysql.host", "host");
-        ConfigManager.get().addDefault("mysql.user", "user");
-        ConfigManager.get().addDefault("mysql.password", "password");
-        ConfigManager.get().addDefault("mysql.database", "database");
-        ConfigManager.get().addDefault("mysql.port", "port");
-        ConfigManager.get().options().copyDefaults(true);
-        ConfigManager.save();
+        // Creates the default settings config.
+        Bukkit.getLogger().info("[KitPvP] - Loading Settings...");
+        Settings.setupSettings();
+        Settings.loadSettings();
 
         // Sets up the MySQL database.
         Bukkit.getLogger().info("[KitPvP] - Loading Hikari...");
         hikari = new HikariDataSource();
         hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        hikari.addDataSourceProperty("serverName", ConfigManager.get().getString("mysql.host"));
-        hikari.addDataSourceProperty("port", ConfigManager.get().getString("mysql.port"));
-        hikari.addDataSourceProperty("databaseName", ConfigManager.get().getString("mysql.database"));
-        hikari.addDataSourceProperty("user", ConfigManager.get().getString("mysql.user"));
-        hikari.addDataSourceProperty("password", ConfigManager.get().getString("mysql.password"));
+        hikari.addDataSourceProperty("serverName", Settings.mysqlHost);
+        hikari.addDataSourceProperty("port", Settings.mysqlPort);
+        hikari.addDataSourceProperty("databaseName", Settings.mysqlDatabase);
+        hikari.addDataSourceProperty("user", Settings.mysqlUser);
+        hikari.addDataSourceProperty("password", Settings.mysqlPassword);
         hikari.addDataSourceProperty("characterEncoding", "utf8");
         hikari.addDataSourceProperty("useUnicode", "true");
 
@@ -148,14 +139,14 @@ public class KitPvP extends JavaPlugin {
 
         // Loads the plugin's listeners.
         Bukkit.getLogger().info("[KitPvP] - Loading Listeners...");
-        loadListeners(new DeathListener(), new EventListener(), new KitListener(), new StaffModeListener());
+        loadListeners(new DeathListener(), new EventListener(), new KitListener(), new StaffModeListener(), new KOTHListener());
 
         // Loads the plugin's commands.
         Bukkit.getLogger().info("[KitPvP] - Loading Commands...");
         loadCommands(new BalanceCmd(), new BountyCmd(), new ClearKitCmd(), new CombatLogCmd(), new EcoGiveCmd(),
                 new EcoSetCmd(), new KitsCmd(), new PayCmd(), new SetSpawnCmd(), new SpawnCmd(), new StatsCmd(),
                 new KitShopCmd(), new EcoTakeCmd(), new ArmorColorCmd(), new KitEnchanterCmd(), new SoupCmd(),
-                new PotionsCmd());
+                new PotionsCmd(), new ReloadCmd(), new KOTHCmd());
 
         // Loads the plugin's kits.
         Bukkit.getLogger().info("[KitPvP] - Loading Kits...");
@@ -171,7 +162,7 @@ public class KitPvP extends JavaPlugin {
         // Loads online players' user data.
         Bukkit.getLogger().info("[KitPvP] - Loading Player Data...");
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerData.getInstance(player).load();
+            Objects.requireNonNull(PlayerData.getInstance(player)).load();
             Spawn.getInstance().teleport(player);
             player.getInventory().setHeldItemSlot(0);
         }
@@ -186,13 +177,13 @@ public class KitPvP extends JavaPlugin {
         KitManager.getInstance().unloadKits();
 
         // Saves the spawn.
-        Bukkit.getLogger().info("[KitPvP] - Saving Spawn...");
-        Spawn.getInstance().save();
+        Bukkit.getLogger().info("[KitPvP] - Saving Settings...");
+        Settings.saveSettings();
 
         // Saves online players' data.
         Bukkit.getLogger().info("[KitPvP] - Saving Player Data...");
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerData.getInstance(player).saveAll();
+            Objects.requireNonNull(PlayerData.getInstance(player)).saveAll();
 
             if (CombatLog.isInCombat(player)) {
                 CombatLog.remove(player);

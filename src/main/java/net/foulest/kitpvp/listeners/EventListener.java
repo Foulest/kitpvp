@@ -1,7 +1,11 @@
 package net.foulest.kitpvp.listeners;
 
+import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.nethandler.shared.LCPacketWaypointRemove;
+import me.neznamy.tab.api.TABAPI;
 import net.foulest.kitpvp.KitPvP;
 import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.koth.KOTH;
 import net.foulest.kitpvp.menus.KitEnchanter;
 import net.foulest.kitpvp.menus.KitSelector;
 import net.foulest.kitpvp.menus.KitShop;
@@ -40,7 +44,7 @@ import java.sql.SQLException;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Handles all server events
  */
 public class EventListener implements Listener {
@@ -48,6 +52,7 @@ public class EventListener implements Listener {
     private static final EventListener INSTANCE = new EventListener();
     private static final Spawn SPAWN = Spawn.getInstance();
     private static final KitPvP KITPVP = KitPvP.getInstance();
+    private static final LunarClientAPI LUNAR_API = LunarClientAPI.getInstance();
     private static final KitManager KIT_MANAGER = KitManager.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
 
@@ -59,6 +64,11 @@ public class EventListener implements Listener {
     public static void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         player.setHealth(20);
         player.setGameMode(GameMode.ADVENTURE);
@@ -76,12 +86,30 @@ public class EventListener implements Listener {
         }
 
         SPAWN.teleport(player);
+
+        if (KOTH.getActiveKoth() != null) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    TABAPI.getPlayer(player.getUniqueId()).showScoreboard("KOTH");
+                }
+            }.runTaskLater(KITPVP, 10L);
+
+            if (LUNAR_API.isRunningLunarClient(player)) {
+                LUNAR_API.sendPacket(player, new LCPacketWaypointRemove("KOTH", KOTH.getActiveKoth().getWorld().getName()));
+            }
+        }
     }
 
     @EventHandler
     public static void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         if (playerData.isNoFall()) {
             playerData.setNoFall(false);
@@ -144,7 +172,7 @@ public class EventListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
 
-            if (REGIONS.isInSafezone(player)) {
+            if (REGIONS.isInSafezone(player.getLocation())) {
                 event.setCancelled(true);
                 player.updateInventory();
             }
@@ -262,6 +290,12 @@ public class EventListener implements Listener {
             Player player = (Player) event.getEntity();
             PlayerData playerData = PlayerData.getInstance(player);
 
+            if (playerData == null) {
+                event.setCancelled(true);
+                player.kickPlayer("Disconnected");
+                return;
+            }
+
             if (playerData.getTeleportingToSpawn() != null) {
                 playerData.getTeleportingToSpawn().cancel();
                 MessageUtil.messagePlayer(player, MessageUtil.colorize("&cTeleportation cancelled, you took damage."));
@@ -274,6 +308,12 @@ public class EventListener implements Listener {
     public static void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            event.setCancelled(true);
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         // Fixes the weird hotbar swap bug.
         if (event.getAction() == InventoryAction.HOTBAR_SWAP
@@ -391,7 +431,7 @@ public class EventListener implements Listener {
                 case "Feather Falling":
                     int ffCost = 50;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -429,7 +469,7 @@ public class EventListener implements Listener {
                 case "Thorns":
                     int thCost = 100;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -467,7 +507,7 @@ public class EventListener implements Listener {
                 case "Protection":
                     int ptCost = 150;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -505,7 +545,7 @@ public class EventListener implements Listener {
                 case "Knockback":
                     int kbCost = 100;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -543,7 +583,7 @@ public class EventListener implements Listener {
                 case "Sharpness":
                     int shCost = 200;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -581,7 +621,7 @@ public class EventListener implements Listener {
                 case "Punch":
                     int pnCost = 100;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -609,7 +649,7 @@ public class EventListener implements Listener {
                     MessageUtil.messagePlayer(player, "");
 
                     playerData.removeCoins(pnCost);
-                    playerData.setPowerEnchant(true);
+                    playerData.setPunchEnchant(true);
 
                     if (playerData.getKit() != null) {
                         playerData.getKit().apply(player);
@@ -619,7 +659,7 @@ public class EventListener implements Listener {
                 case "Power":
                     int pwCost = 200;
 
-                    if (!REGIONS.isInSafezone(player)) {
+                    if (!REGIONS.isInSafezone(player.getLocation())) {
                         player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
                         MessageUtil.messagePlayer(player, "&cYou need to be in spawn to do this.");
                         event.setCancelled(true);
@@ -705,6 +745,12 @@ public class EventListener implements Listener {
         Block block = event.getClickedBlock();
         PlayerData playerData = PlayerData.getInstance(player);
 
+        if (playerData == null) {
+            event.setCancelled(true);
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         if (event.getAction().toString().contains("RIGHT") && block != null
                 && block.getState() instanceof InventoryHolder) {
             event.setCancelled(true);
@@ -721,9 +767,10 @@ public class EventListener implements Listener {
                     break;
 
                 case FISHING_ROD:
-                    if (REGIONS.isInSafezone(player)) {
+                    if (REGIONS.isInSafezone(player.getLocation())) {
                         event.setCancelled(true);
                     }
+
                     break;
 
                 case POTION:
@@ -740,7 +787,7 @@ public class EventListener implements Listener {
                         break;
                     }
 
-                    if (REGIONS.isInSafezone(player)) {
+                    if (REGIONS.isInSafezone(player.getLocation())) {
                         event.setCancelled(true);
                         player.updateInventory();
                     }
@@ -760,7 +807,7 @@ public class EventListener implements Listener {
                         break;
                     }
 
-                    if (REGIONS.isInSafezone(player)) {
+                    if (REGIONS.isInSafezone(player.getLocation())) {
                         event.setCancelled(true);
                         break;
                     }
@@ -850,6 +897,12 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
+        if (playerData == null) {
+            event.setCancelled(true);
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         if (!playerData.isLoaded()) {
             event.setCancelled(true);
         }
@@ -867,6 +920,12 @@ public class EventListener implements Listener {
         double deltaY = event.getTo().getY() - event.getFrom().getY();
         double deltaXZ = Math.hypot(event.getTo().getX() - event.getFrom().getX(), event.getTo().getZ() - event.getFrom().getZ());
         boolean playerMoved = (deltaXZ > 0.05 || Math.abs(deltaY) > 0.05);
+
+        if (playerData == null) {
+            event.setCancelled(true);
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         // Locks the player in place if they aren't loaded.
         if (!playerData.isLoaded()) {
@@ -919,7 +978,7 @@ public class EventListener implements Listener {
         }
 
         // Removes the player's no fall.
-        if (playerData.isNoFall() && !playerData.isPendingNoFallRemoval() && !REGIONS.isInSafezone(player)) {
+        if (playerData.isNoFall() && !playerData.isPendingNoFallRemoval() && !REGIONS.isInSafezone(player.getLocation())) {
             playerData.setPendingNoFallRemoval(true);
 
             new BukkitRunnable() {
@@ -927,7 +986,7 @@ public class EventListener implements Listener {
                 public void run() {
                     playerData.setPendingNoFallRemoval(false);
 
-                    if (playerData.isNoFall() && !REGIONS.isInSafezone(player)) {
+                    if (playerData.isNoFall() && !REGIONS.isInSafezone(player.getLocation())) {
                         playerData.setNoFall(false);
                     }
                 }
@@ -940,6 +999,12 @@ public class EventListener implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             PlayerData playerData = PlayerData.getInstance(player);
+
+            if (playerData == null) {
+                event.setCancelled(true);
+                player.kickPlayer("Disconnected");
+                return;
+            }
 
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL && playerData.isNoFall()) {
                 event.setCancelled(true);

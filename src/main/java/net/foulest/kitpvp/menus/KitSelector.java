@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Inventory for Kit Selector
  */
 public class KitSelector {
@@ -94,6 +94,11 @@ public class KitSelector {
         PlayerData playerData = PlayerData.getInstance(player);
         ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name(" ").getItem();
         int rowSize = 9;
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         // Sets non-present items to glass.
         for (int i = 0; i < rowSize; i++) {

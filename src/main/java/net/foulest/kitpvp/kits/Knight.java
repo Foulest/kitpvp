@@ -31,21 +31,21 @@ public class Knight implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).hideInfo();
         return Collections.singletonList(sword);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOD"
                 + "A1Mzk3M2U3YzUyMzcyYzNiMTExMzk0ZGZmOTUxOWNiYWMxZmJhM2Y2NTliMjE4NmJlZjhlZWY5ZTEwZmEyIn19fQ==";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKnight's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKnight's Head"),
+                new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

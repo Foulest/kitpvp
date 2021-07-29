@@ -1,6 +1,5 @@
 package net.foulest.kitpvp.util;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -17,23 +16,32 @@ import java.util.List;
 /**
  * @author nonamesldev, Foulest
  * @project KitPvP
- *
+ * <p>
  * https://www.spigotmc.org/threads/util-itembuilder-manage-items-easily.48397/
  */
 @Getter
-@AllArgsConstructor
 public class ItemBuilder {
 
     private final ItemStack item;
+    private int slot;
 
     public ItemBuilder(Material mat) {
         item = new ItemStack(mat);
+    }
+
+    public ItemBuilder(ItemStack stack) {
+        item = new ItemStack(stack);
     }
 
     public ItemBuilder name(String name) {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(MessageUtil.colorize(name));
         item.setItemMeta(meta);
+        return this;
+    }
+
+    public ItemBuilder slot(int slot) {
+        this.slot = slot;
         return this;
     }
 

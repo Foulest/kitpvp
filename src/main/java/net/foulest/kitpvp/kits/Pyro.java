@@ -35,23 +35,23 @@ public class Pyro implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack weapon = new ItemBuilder(Material.WOOD_SWORD).enchant(Enchantment.FIRE_ASPECT, 1).unbreakable(true).getItem();
-        ItemStack bow = new ItemBuilder(Material.BOW).enchant(Enchantment.ARROW_FIRE, 1).unbreakable(true).getItem();
-        ItemStack arrow = new ItemBuilder(Material.ARROW).amount(16).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder weapon = new ItemBuilder(Material.WOOD_SWORD).unbreakable(true).hideInfo().enchant(Enchantment.FIRE_ASPECT, 1);
+        ItemBuilder bow = new ItemBuilder(Material.BOW).unbreakable(true).hideInfo().enchant(Enchantment.ARROW_FIRE, 1);
+        ItemBuilder arrow = new ItemBuilder(Material.ARROW).amount(16);
         return Arrays.asList(weapon, bow, arrow);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMWF"
                 + "mNTc2NDU0Y2I2NDFhNmU1OTVlZGY0ZTc3YTcwYzIwM2U4OGVjYWIwZjIyMGQzZmUzMGZiM2NjYzhjOGJhOCJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fPyro's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.CHAINMAIL_CHESTPLATE).unbreakable(true).getItem(),
-                new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.GOLD_BOOTS).enchant(Enchantment.PROTECTION_FIRE, 4).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fPyro's Head"),
+                new ItemBuilder(Material.CHAINMAIL_CHESTPLATE).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.GOLD_BOOTS).unbreakable(true).hideInfo().enchant(Enchantment.PROTECTION_FIRE, 4)
         };
     }
 

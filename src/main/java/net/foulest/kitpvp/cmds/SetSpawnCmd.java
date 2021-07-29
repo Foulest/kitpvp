@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for setting the server's spawn point.
  */
 @SuppressWarnings("MethodMayBeStatic")

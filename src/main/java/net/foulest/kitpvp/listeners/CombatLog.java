@@ -15,7 +15,7 @@ import java.util.*;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Combat tag/log handling
  */
 public class CombatLog {
@@ -31,6 +31,11 @@ public class CombatLog {
 
         for (Player player : players) {
             PlayerData playerData = PlayerData.getInstance(player);
+
+            if (playerData == null) {
+                player.kickPlayer("Disconnected");
+                return;
+            }
 
             if (LUNAR_API.isRunningLunarClient(player)) {
                 LUNAR_API.sendPacket(player, new LCPacketCooldown("Combat Tag", 15000L, Material.IRON_SWORD.getId()));

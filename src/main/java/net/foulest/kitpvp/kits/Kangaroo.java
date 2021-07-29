@@ -39,23 +39,23 @@ public class Kangaroo implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).getItem();
-        ItemStack special = new ItemBuilder(Material.FIREWORK).name("&aHop &7(Right Click)")
-                .lore("&7Hop around like a Kangaroo.").getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).hideInfo();
+        ItemBuilder special = new ItemBuilder(Material.FIREWORK).name("&aHop &7(Right Click)")
+                .lore("&7Hop around like a Kangaroo.");
         return Arrays.asList(sword, special);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTR"
                 + "hYjQyYWZhOTJhZGYxNWFiZmJmNDljZDA5NjY0NDA5NjQ5Mzk3N2YzNjYyMDNmNTIzMTFlYzk3ODJiY2YyNCJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKangaroo's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x7F4A19)).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_BOOTS).enchant(Enchantment.PROTECTION_FALL, 4).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fKangaroo's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo().color(Color.fromRGB(0x7F4A19)),
+                new ItemBuilder(Material.IRON_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.IRON_BOOTS).unbreakable(true).hideInfo().enchant(Enchantment.PROTECTION_FALL, 4)
         };
     }
 

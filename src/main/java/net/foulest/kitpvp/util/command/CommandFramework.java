@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 /**
  * @author minnymin3
  * @project KitPvP
- *
+ * <p>
  * https://github.com/mcardy/CommandFramework
  */
 public class CommandFramework implements CommandExecutor {

@@ -35,21 +35,21 @@ public class Ninja implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack weapon = new ItemBuilder(Material.IRON_SWORD).unbreakable(true).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder weapon = new ItemBuilder(Material.STONE_SWORD).unbreakable(true).hideInfo();
         return Collections.singletonList(weapon);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM"
                 + "jQ2ZmZlNGY2OGRhYWEwZjgzNDUzNmNiNTM4NmEzYTc5ZTZiM2U4NDM1OTY5NDM4MDRlMWIwOGE4MmVkNDRhNiJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fNinja's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0x0C0C0C)).unbreakable(true).getItem(),
-                new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.CHAINMAIL_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fNinja's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo().color(Color.fromRGB(0x0C0C0C)),
+                new ItemBuilder(Material.CHAINMAIL_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.CHAINMAIL_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

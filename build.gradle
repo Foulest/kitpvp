@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'net.foulest'
-version = '1.1.2'
+version = '1.1.3'
 description = 'KitPvP'
 
 repositories {
@@ -16,19 +16,15 @@ repositories {
     }
 
     maven {
-        url = uri('http://repo.extendedclip.com/content/repositories/placeholderapi/')
+        url = uri('https://repo.extendedclip.com/content/repositories/placeholderapi/')
     }
 
     maven {
-        url = uri('http://maven.enginehub.org/repo/')
+        url = uri('https://maven.enginehub.org/repo/')
     }
 
     maven {
-        url = uri('http://maven.sk89q.com/repo/')
-    }
-
-    maven {
-        url = uri('https://maven.moonsworth.com/repository/lunarclient-public/')
+        url = uri('https://maven.sk89q.com/repo/')
     }
 }
 
@@ -40,10 +36,11 @@ configurations {
 dependencies {
     implementation group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
     implementation group: 'net.foulest.fstaff', name: 'FStaff', version: '1.0.0'
-    implementation group: 'me.clip', name: 'placeholderapi', version: '2.10.9'
+    implementation group: 'me.nezmany', name: 'TAB', version: '2.9.2'
+    implementation group: 'me.clip', name: 'placeholderapi', version: '2.10.10'
     implementation group: 'com.sk89q', name: 'worldedit', version: '6.0.0-SNAPSHOT'
     implementation group: 'com.sk89q.worldguard', name: 'worldguard-legacy', version: '6.2'
-    implementation group: 'com.lunarclient', name: 'bukkitapi', version: '1.0-20210418.161506-6'
+    implementation group: 'com.lunarclient', name: 'LunarClientAPI', version: '1.0'
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
     provided group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'

@@ -35,23 +35,23 @@ public class Spiderman implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.WOOD_SWORD).unbreakable(true).getItem();
-        ItemStack special = new ItemBuilder(Material.WEB).name("&aWeb Slinger &7(Right Click)")
-                .lore("&7Traps players in cobwebs.").getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.WOOD_SWORD).unbreakable(true).hideInfo();
+        ItemBuilder special = new ItemBuilder(Material.WEB).name("&aWeb Slinger &7(Right Click)")
+                .lore("&7Traps players in cobwebs.");
         return Arrays.asList(sword, special);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYW"
                 + "M0MGQ5ODBjNjEyNzI0M2NkM2JiZGMwN2FhOTY1NDgzZWI2YTdlZWFiOWFhY2U5NzAzZGY5ZGYyOGQ3ZjU1MiJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fSpiderman's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).color(Color.fromRGB(0xCC2E33)).unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.DIAMOND_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fSpiderman's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo().color(Color.fromRGB(0xCC2E33)),
+                new ItemBuilder(Material.DIAMOND_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.DIAMOND_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

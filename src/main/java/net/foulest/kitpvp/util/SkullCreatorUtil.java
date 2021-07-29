@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * @author deanveloper, Foulest
  * @project KitPvP
- *
+ * <p>
  * https://github.com/deanveloper/SkullCreator
  */
 public final class SkullCreatorUtil {

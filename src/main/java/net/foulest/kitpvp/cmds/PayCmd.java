@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for sending coins to other players.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -43,8 +43,19 @@ public class PayCmd {
 
             Player player = args.getPlayer();
             Player sender = (Player) args.getSender();
-            PlayerData targetData = PlayerData.getInstance(target);
+            PlayerData targetData = PlayerData.getInstance(player);
             PlayerData senderData = PlayerData.getInstance(sender);
+
+            if (targetData == null) {
+                player.kickPlayer("Disconnected");
+                return;
+            }
+
+            if (senderData == null) {
+                sender.kickPlayer("Disconnected");
+                return;
+            }
+
             int check = senderData.getCoins() - amount;
 
             if (check <= 0) {
@@ -56,14 +67,14 @@ public class PayCmd {
             senderData.removeCoins(amount);
             targetData.saveStats();
 
-            if ((args.getSender() instanceof Player) && target == args.getSender()) {
+            if ((args.getSender() instanceof Player) && player == args.getSender()) {
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1.0F, 1.0F);
-                MessageUtil.messagePlayer(target, "&cYou can't pay yourself.");
+                MessageUtil.messagePlayer(player, "&cYou can't pay yourself.");
                 return;
             }
 
-            MessageUtil.messagePlayer(target, "&a" + player.getName() + " sent you " + amount + " coins!");
-            MessageUtil.messagePlayer(args.getSender(), "&aYou sent " + target.getName() + " " + amount + " coins!");
+            MessageUtil.messagePlayer(player, "&a" + player.getName() + " sent you " + amount + " coins!");
+            MessageUtil.messagePlayer(args.getSender(), "&aYou sent " + player.getName() + " " + amount + " coins!");
             return;
         }
 

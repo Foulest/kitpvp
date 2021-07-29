@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for opening the Kit Selector menu.
  * Also for applying specific kits.
  */
@@ -27,7 +27,7 @@ public class KitsCmd {
     public void onCommand(CommandArgs args) {
         Player player = args.getPlayer();
 
-        if (!REGIONS.isInSafezone(player)) {
+        if (!REGIONS.isInSafezone(player.getLocation())) {
             MessageUtil.messagePlayer(player, "&cYou must be in spawn to use this command.");
             return;
         }

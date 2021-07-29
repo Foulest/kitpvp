@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for teleporting to spawn.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -32,6 +32,11 @@ public class SpawnCmd {
         Entity entityPlayer = player.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         if (CombatLog.isInCombat(player)) {
             MessageUtil.messagePlayer(args.getPlayer(), "&cYou may not use this command while in combat.");
             return;
@@ -42,7 +47,7 @@ public class SpawnCmd {
             return;
         }
 
-        if (REGIONS.isInSafezone(player)) {
+        if (REGIONS.isInSafezone(player.getLocation())) {
             SPAWN.teleport(player);
             player.getInventory().setHeldItemSlot(0);
             MessageUtil.messagePlayer(player, MessageUtil.colorize("&aTeleported to spawn."));

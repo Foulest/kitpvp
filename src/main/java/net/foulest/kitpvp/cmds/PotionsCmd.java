@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for setting your healing item to Potions.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -27,7 +27,12 @@ public class PotionsCmd {
         Player player = args.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
 
-        if (!REGIONS.isInSafezone(player)) {
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
+        if (!REGIONS.isInSafezone(player.getLocation())) {
             MessageUtil.messagePlayer(player, "&cYou must be in spawn to use this command.");
             return;
         }

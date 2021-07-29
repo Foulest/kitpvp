@@ -2,13 +2,14 @@ package net.foulest.kitpvp.util;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.foulest.kitpvp.data.PlayerData;
+import net.foulest.kitpvp.koth.KOTH;
 import net.foulest.kitpvp.listeners.CombatLog;
 import org.bukkit.entity.Player;
 
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Sets up placeholders with PlaceholderAPI
  */
 public class PlaceholderUtil extends PlaceholderExpansion {
@@ -25,12 +26,17 @@ public class PlaceholderUtil extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return "1.1.2";
+        return "1.1.3";
     }
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return "";
+        }
 
         // Placeholder: %kitpvp_kills%
         if (identifier.equals("kills")) {
@@ -95,6 +101,16 @@ public class PlaceholderUtil extends PlaceholderExpansion {
         // Placeholder: %kitpvp_bounty_tab%
         if (identifier.equals("bounty_tab")) {
             return (player == null || playerData.getBounty() == 0) ? "" : "&6Bounty: &e&l$" + playerData.getBounty();
+        }
+
+        // Placeholder: %kitpvp_koth%
+        if (identifier.equals("koth")) {
+            return KOTH.getActiveKoth() == null ? "" : KOTH.getActiveKoth().getName();
+        }
+
+        // Placeholder: %kitpvp_koth_time_left%
+        if (identifier.equals("koth_time_left")) {
+            return KOTH.getActiveKoth() == null ? "00:00" : KOTH.getTimeLeftNeat(KOTH.getActiveKoth());
         }
 
         return null;

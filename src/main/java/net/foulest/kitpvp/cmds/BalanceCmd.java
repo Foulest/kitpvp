@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for displaying your current balance.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -21,20 +21,32 @@ public class BalanceCmd {
             description = "Shows your current balance.", usage = "/balance", inGameOnly = true)
     public void onCommand(CommandArgs args) {
         Player player = args.getPlayer();
+        PlayerData playerData = PlayerData.getInstance(player);
         CommandSender sender = args.getSender();
 
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         if (args.length() != 1) {
-            MessageUtil.messagePlayer(sender, "&fCoins: &6" + PlayerData.getInstance(player).getCoins());
+            MessageUtil.messagePlayer(sender, "&fCoins: &6" + playerData.getCoins());
             return;
         }
 
         Player target = Bukkit.getPlayer(args.getArgs(0));
+        PlayerData targetData = PlayerData.getInstance(target);
 
         if (target == null) {
             MessageUtil.messagePlayer(sender, "&cPlayer not found.");
             return;
         }
 
-        MessageUtil.messagePlayer(args.getSender(), "&f" + target.getName() + "'s Coins: &6" + PlayerData.getInstance(target).getCoins());
+        if (targetData == null) {
+            target.kickPlayer("Disconnected");
+            return;
+        }
+
+        MessageUtil.messagePlayer(args.getSender(), "&f" + target.getName() + "'s Coins: &6" + targetData.getCoins());
     }
 }

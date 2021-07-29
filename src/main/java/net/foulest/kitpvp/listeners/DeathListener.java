@@ -4,10 +4,11 @@ import net.foulest.kitpvp.KitPvP;
 import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.kits.Summoner;
 import net.foulest.kitpvp.kits.Tamer;
+import net.foulest.kitpvp.koth.KOTH;
 import net.foulest.kitpvp.region.Spawn;
-import net.foulest.kitpvp.util.ConfigManager;
 import net.foulest.kitpvp.util.MessageUtil;
 import net.foulest.kitpvp.util.NMSUtil;
+import net.foulest.kitpvp.util.Settings;
 import net.foulest.kitpvp.util.kits.Kit;
 import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ import org.bukkit.util.Vector;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Handles all deaths
  */
 public class DeathListener implements Listener {
@@ -37,6 +38,12 @@ public class DeathListener implements Listener {
 
     public static void handleDeath(Player receiver, boolean onPlayerQuit) {
         PlayerData receiverData = PlayerData.getInstance(receiver);
+
+        if (receiverData == null) {
+            receiver.kickPlayer("Disconnected");
+            return;
+        }
+
         Kit currentKit = receiverData.getKit();
         Vector vec = new Vector();
 
@@ -82,10 +89,25 @@ public class DeathListener implements Listener {
         receiverData.setPreviousKit(currentKit);
         receiverData.setDeaths(receiverData.getDeaths() + 1);
 
+        // Sets the player's current kit and adds a death.
+        if (KOTH.getActiveKoth() != null) {
+            KOTH.playersInKOTH.get(KOTH.getActiveKoth()).remove(receiver);
+
+            if (KOTH.getActiveKoth().getCapper() == receiver) {
+                KOTH.getActiveKoth().setCapper(null);
+                KOTH.getActiveKoth().setTimeLeft(KOTH.getActiveKoth().getCapTime());
+            }
+        }
+
         // Runs specific code if the player is killed by another player.
         if (CombatLog.getLastAttacker(receiver) != null && CombatLog.getLastAttacker(receiver) != receiver) {
             Player damager = CombatLog.getLastAttacker(receiver);
             PlayerData damagerData = PlayerData.getInstance(damager);
+
+            if (damagerData == null) {
+                damager.kickPlayer("Disconnected");
+                return;
+            }
 
             // Adds a kill to the damager.
             damagerData.setKills(damagerData.getKills() + 1);
@@ -105,9 +127,9 @@ public class DeathListener implements Listener {
 
             // Gives the damager coins and experience.
             int rewardAmount = 5 * (damagerData.getKillstreak() / 5);
-            int coinsGiven = ConfigManager.get().getInt("kill.coins-bonus") + rewardAmount;
-            int experienceGiven = ConfigManager.get().getInt("kill.experience-bonus") + rewardAmount;
-            damagerData.setCoins(damagerData.getCoins() + coinsGiven);
+            int coinsGiven = Settings.killCoinBonus + rewardAmount;
+            int experienceGiven = Settings.killExpBonus + rewardAmount;
+            damagerData.addCoins(coinsGiven);
             damagerData.addExperience(experienceGiven);
 
             // Removes the player's potential bounty.

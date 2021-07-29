@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Inventory for Kit Shop
  */
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
@@ -92,6 +92,11 @@ public class KitShop {
         ItemStack glass = new ItemBuilder(Material.STAINED_GLASS_PANE).durability(7).name(" ").getItem();
         int paidKits = 0;
         int rowSize = 9;
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return true;
+        }
 
         // Sets non-present items to glass.
         for (int i = 0; i < rowSize; i++) {

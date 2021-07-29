@@ -31,22 +31,22 @@ public class Thor implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.IRON_AXE).name("&aMjolnir &7(Right Click)")
-                .lore("&7Strike your opponents with lightning.").unbreakable(true).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.IRON_AXE).name("&aMjolnir &7(Right Click)")
+                .lore("&7Strike your opponents with lightning.").unbreakable(true).hideInfo();
         return Collections.singletonList(sword);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUv"
                 + "Zjg2NDRkZmQyNGM4MjRmNTU1NTY5ZWMwNjVjMDcwYTk3ZWQ5M2U1ZTY0M2E3MmQ1MzA0OGUyMDMyMWUwYjI3MCJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fThor's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).getItem(),
-                new ItemBuilder(Material.GOLD_LEGGINGS).unbreakable(true).getItem(),
-                new ItemBuilder(Material.GOLD_BOOTS).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fThor's Head"),
+                new ItemBuilder(Material.IRON_CHESTPLATE).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.GOLD_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.GOLD_BOOTS).unbreakable(true).hideInfo()
         };
     }
 

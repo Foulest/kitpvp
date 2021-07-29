@@ -37,19 +37,19 @@ public class Ghost implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.DIAMOND_SWORD).enchant(Enchantment.DAMAGE_ALL, 1).unbreakable(true).getItem();
-        ItemStack air = new ItemBuilder(Material.AIR).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.DIAMOND_SWORD).unbreakable(true).hideInfo().enchant(Enchantment.DAMAGE_ALL, 1);
+        ItemBuilder air = new ItemBuilder(Material.AIR).slot(1);
         return Arrays.asList(sword, air);
     }
 
     @Override
-    public ItemStack[] getArmor() {
-        return new ItemStack[]{
-                new ItemBuilder(Material.AIR).getItem(),
-                new ItemBuilder(Material.AIR).getItem(),
-                new ItemBuilder(Material.AIR).getItem(),
-                new ItemBuilder(Material.AIR).getItem()
+    public ItemBuilder[] getArmor() {
+        return new ItemBuilder[]{
+                new ItemBuilder(Material.AIR),
+                new ItemBuilder(Material.AIR),
+                new ItemBuilder(Material.AIR),
+                new ItemBuilder(Material.AIR)
         };
     }
 

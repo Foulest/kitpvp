@@ -30,12 +30,12 @@ public interface Kit {
     /**
      * The items of the kit.
      */
-    List<ItemStack> getItems();
+    List<ItemBuilder> getItems();
 
     /**
      * The armor of the kit.
      */
-    ItemStack[] getArmor();
+    ItemBuilder[] getArmor();
 
     /**
      * The potion effects of the kit.
@@ -60,14 +60,16 @@ public interface Kit {
     default void apply(Player player) {
         PlayerData playerData = PlayerData.getInstance(player);
 
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         // Checks if the player owns the kit they're trying to equip.
         if (!playerData.getOwnedKits().contains(this)) {
             MessageUtil.messagePlayer(player, "&cYou do not own the " + getName() + " kit.");
             return;
         }
-
-        // Sets the player's kit data.
-        playerData.setKit(this);
 
         // Clears the player's inventory and armor.
         player.getInventory().clear();
@@ -78,6 +80,9 @@ public interface Kit {
         for (PotionEffect effects : player.getActivePotionEffects()) {
             player.removePotionEffect(effects.getType());
         }
+
+        // Sets the player's kit data.
+        playerData.setKit(this);
 
         // Sets the player's potion effects.
         if (getPotionEffects() != null) {
@@ -90,6 +95,37 @@ public interface Kit {
             }
         }
 
+        // Sets the player's kit items.
+        for (ItemBuilder item : getItems()) {
+            if (item.getItem().getType().toString().toLowerCase().contains("sword")
+                    || item.getItem().getType().toString().toLowerCase().contains("cactus")
+                    || item.getItem().getType().toString().toLowerCase().contains("axe")) {
+                if (playerData.isKnockbackEnchant()) {
+                    item = item.enchant(Enchantment.KNOCKBACK, 2);
+                }
+
+                if (playerData.isSharpnessEnchant()) {
+                    item = item.enchant(Enchantment.DAMAGE_ALL, 2);
+                }
+            }
+
+            if (item.getItem().getType().toString().toLowerCase().contains("bow")) {
+                if (playerData.isPunchEnchant()) {
+                    item = item.enchant(Enchantment.ARROW_KNOCKBACK, 2);
+                }
+
+                if (playerData.isPowerEnchant()) {
+                    item = item.enchant(Enchantment.ARROW_DAMAGE, 2);
+                }
+            }
+
+            if (item.getSlot() != 0) {
+                player.getInventory().setItem(item.getSlot(), item.getItem());
+            } else {
+                player.getInventory().addItem(item.getItem());
+            }
+        }
+
         // Sets the player's healing item.
         for (int i = 0; i < player.getInventory().getSize(); ++i) {
             if (playerData.isUsingSoup()) {
@@ -99,84 +135,55 @@ public interface Kit {
             }
         }
 
-        // Sets the player's kit items.
-        for (int i = 0; i < getItems().size(); ++i) {
-            ItemStack item = getItems().get(i);
-
-            if (item.getType().toString().toLowerCase().contains("sword")
-                    || item.getType().toString().toLowerCase().contains("cactus")
-                    || item.getType().toString().toLowerCase().contains("axe")) {
-                if (playerData.isKnockbackEnchant()) {
-                    item = new ItemBuilder(item).enchant(Enchantment.KNOCKBACK, 2).getItem();
-                }
-
-                if (playerData.isSharpnessEnchant()) {
-                    item = new ItemBuilder(item).enchant(Enchantment.DAMAGE_ALL, 2).getItem();
-                }
-            }
-
-            if (item.getType().toString().toLowerCase().contains("bow")) {
-                if (playerData.isPunchEnchant()) {
-                    item = new ItemBuilder(item).enchant(Enchantment.ARROW_KNOCKBACK, 2).getItem();
-                }
-
-                if (playerData.isPowerEnchant()) {
-                    item = new ItemBuilder(item).enchant(Enchantment.ARROW_DAMAGE, 2).getItem();
-                }
-            }
-
-            player.getInventory().setItem(i, item);
-        }
-
         // Sets the player's armor.
-        ItemStack helmet = getArmor()[0];
-        ItemStack chestplate = getArmor()[1];
-        ItemStack leggings = getArmor()[2];
-        ItemStack boots = getArmor()[3];
+        ItemBuilder helmet = (getArmor()[0] == null ? new ItemBuilder(Material.AIR) : getArmor()[0]);
+        ItemBuilder chestplate = (getArmor()[1] == null ? new ItemBuilder(Material.AIR) : getArmor()[1]);
+        ItemBuilder leggings = (getArmor()[2] == null ? new ItemBuilder(Material.AIR) : getArmor()[2]);
+        ItemBuilder boots = (getArmor()[3] == null ? new ItemBuilder(Material.AIR) : getArmor()[3]);
 
         if (playerData.isThornsEnchant()) {
-            if (helmet != null && helmet.getType() != Material.AIR && helmet.getType() != Material.SKULL_ITEM) {
-                helmet = new ItemBuilder(helmet).enchant(Enchantment.THORNS, 2).getItem();
+            if (helmet.getItem().getType() != Material.AIR && helmet.getItem().getType() != Material.SKULL_ITEM) {
+                helmet = helmet.enchant(Enchantment.THORNS, 2);
             }
 
-            if (chestplate != null && chestplate.getType() != Material.AIR) {
-                chestplate = new ItemBuilder(chestplate).enchant(Enchantment.THORNS, 2).getItem();
+            if (chestplate.getItem().getType() != Material.AIR) {
+                chestplate = chestplate.enchant(Enchantment.THORNS, 2);
             }
 
-            if (leggings != null && leggings.getType() != Material.AIR) {
-                leggings = new ItemBuilder(leggings).enchant(Enchantment.THORNS, 2).getItem();
+            if (leggings.getItem().getType() != Material.AIR) {
+                leggings = leggings.enchant(Enchantment.THORNS, 2);
             }
 
-            if (boots != null && boots.getType() != Material.AIR) {
-                boots = new ItemBuilder(boots).enchant(Enchantment.THORNS, 2).getItem();
+            if (boots.getItem().getType() != Material.AIR) {
+                boots = boots.enchant(Enchantment.THORNS, 2);
             }
         }
 
         if (playerData.isProtectionEnchant()) {
-            if (helmet != null && helmet.getType() != Material.AIR && helmet.getType() != Material.SKULL_ITEM) {
-                helmet = new ItemBuilder(helmet).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).getItem();
+            if (helmet.getItem().getType() != Material.AIR && helmet.getItem().getType() != Material.SKULL_ITEM) {
+                helmet = helmet.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             }
 
-            if (chestplate != null && chestplate.getType() != Material.AIR) {
-                chestplate = new ItemBuilder(chestplate).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).getItem();
+            if (chestplate.getItem().getType() != Material.AIR) {
+                chestplate = chestplate.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             }
 
-            if (leggings != null && leggings.getType() != Material.AIR) {
-                leggings = new ItemBuilder(leggings).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).getItem();
+            if (leggings.getItem().getType() != Material.AIR) {
+                leggings = leggings.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             }
 
-            if (boots != null && boots.getType() != Material.AIR) {
-                boots = new ItemBuilder(boots).enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).getItem();
+            if (boots.getItem().getType() != Material.AIR) {
+                boots = boots.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
             }
         }
 
-        if (playerData.isFeatherFallingEnchant() && boots != null && boots.getType() != Material.AIR) {
-            boots = new ItemBuilder(boots).enchant(Enchantment.PROTECTION_FALL, 4).getItem();
+        if (playerData.isFeatherFallingEnchant() && boots.getItem().getType() != Material.AIR) {
+            boots = boots.enchant(Enchantment.PROTECTION_FALL, 4);
         }
 
-        player.getInventory().setHelmet(helmet);
-        player.getInventory().setChestplate(chestplate);
-        player.getInventory().setLeggings(leggings);
-        player.getInventory().setBoots(boots);
+        player.getInventory().setHelmet(helmet.getItem());
+        player.getInventory().setChestplate(chestplate.getItem());
+        player.getInventory().setLeggings(leggings.getItem());
+        player.getInventory().setBoots(boots.getItem());
     }
 }

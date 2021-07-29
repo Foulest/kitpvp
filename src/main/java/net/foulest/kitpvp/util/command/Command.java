@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * @author minnymin3
  * @project KitPvP
- *
+ * <p>
  * https://github.com/mcardy/CommandFramework
  */
 @Target(ElementType.METHOD)

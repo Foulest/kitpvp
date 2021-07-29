@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for setting bounties on players, and checking your bounty status.
  * Some part of this is locked behind a paywall (permissions based).
  */
@@ -25,6 +25,12 @@ public class BountyCmd {
     public void onCommand(CommandArgs args) {
         Player player = args.getPlayer();
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
+
         Player benefactor = Bukkit.getPlayer(playerData.getBenefactor());
 
         if (args.length() == 0) {
@@ -62,6 +68,11 @@ public class BountyCmd {
 
         if (target == null) {
             MessageUtil.messagePlayer(player, "&cPlayer not found.");
+            return;
+        }
+
+        if (targetData == null) {
+            target.kickPlayer("Disconnected");
             return;
         }
 

@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Foulest
@@ -27,7 +26,7 @@ public class Archer implements Kit {
 
     @Override
     public ItemStack getDisplayItem() {
-        return new ItemStack(Objects.requireNonNull(Material.BOW));
+        return new ItemStack(Material.BOW);
     }
 
     @Override
@@ -39,23 +38,23 @@ public class Archer implements Kit {
     }
 
     @Override
-    public List<ItemStack> getItems() {
-        ItemStack sword = new ItemBuilder(Material.STONE_SWORD).hideInfo().enchant(Enchantment.KNOCKBACK, 1).unbreakable(true).getItem();
-        ItemStack bow = new ItemBuilder(Material.BOW).hideInfo().enchant(Enchantment.ARROW_DAMAGE, 1).unbreakable(true).getItem();
-        ItemStack arrow = new ItemBuilder(Material.ARROW).hideInfo().amount(32).getItem();
+    public List<ItemBuilder> getItems() {
+        ItemBuilder sword = new ItemBuilder(Material.WOOD_SWORD).unbreakable(true).hideInfo().enchant(Enchantment.KNOCKBACK, 1);
+        ItemBuilder bow = new ItemBuilder(Material.BOW).unbreakable(true).hideInfo().enchant(Enchantment.ARROW_DAMAGE, 1);
+        ItemBuilder arrow = new ItemBuilder(Material.ARROW).unbreakable(true).hideInfo().amount(32).slot(9);
         return Arrays.asList(sword, bow, arrow);
     }
 
     @Override
-    public ItemStack[] getArmor() {
+    public ItemBuilder[] getArmor() {
         String base64 = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYT"
                 + "MwMzIyZDM1NjgzMjI4ZjMwZmJjYThjZDFjMmE2MDIwODczMDE1MTZmNmI0MzhiNDhkNjc2ZWU1NTIwNzU3MCJ9fX0=";
 
-        return new ItemStack[]{
-                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).hideInfo().name("&fArcher's Head").unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_CHESTPLATE).hideInfo().unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_LEGGINGS).hideInfo().unbreakable(true).getItem(),
-                new ItemBuilder(Material.LEATHER_BOOTS).hideInfo().enchant(Enchantment.PROTECTION_FALL, 4).unbreakable(true).getItem()
+        return new ItemBuilder[]{
+                new ItemBuilder(SkullCreatorUtil.itemFromBase64(base64)).name("&fArcher's Head"),
+                new ItemBuilder(Material.LEATHER_CHESTPLATE).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.LEATHER_LEGGINGS).unbreakable(true).hideInfo(),
+                new ItemBuilder(Material.LEATHER_BOOTS).unbreakable(true).hideInfo().enchant(Enchantment.PROTECTION_FALL, 4)
         };
     }
 

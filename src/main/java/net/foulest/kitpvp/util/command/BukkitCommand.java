@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author minnymin3
  * @project KitPvP
- *
+ * <p>
  * https://github.com/mcardy/CommandFramework
  */
 public class BukkitCommand extends org.bukkit.command.Command {

@@ -4,27 +4,23 @@ import lombok.Getter;
 import net.foulest.kitpvp.KitPvP;
 import net.foulest.kitpvp.data.PlayerData;
 import net.foulest.kitpvp.listeners.CombatLog;
-import net.foulest.kitpvp.util.ConfigManager;
 import net.foulest.kitpvp.util.MessageUtil;
+import net.foulest.kitpvp.util.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-
-import java.util.logging.Logger;
 
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Handles the spawn point
  */
 @Getter
 public class Spawn {
 
     private static final Spawn INSTANCE = new Spawn();
-    private static final Logger log = Logger.getLogger("Minecraft");
     private static final KitPvP KITPVP = KitPvP.getInstance();
     private static final Regions REGIONS = Regions.getInstance();
     private Location location;
@@ -45,6 +41,11 @@ public class Spawn {
      */
     public void teleport(Player player) {
         PlayerData playerData = PlayerData.getInstance(player);
+
+        if (playerData == null) {
+            player.kickPlayer("Disconnected");
+            return;
+        }
 
         if (location == null) {
             MessageUtil.messagePlayer(player, "&cThe spawn point is not set. Please contact an administrator.");
@@ -70,40 +71,16 @@ public class Spawn {
     }
 
     /**
-     * Saves the spawn point data into the config files.
-     */
-    public void save() {
-        if (location == null) {
-            return;
-        }
-
-        ConfigManager.get().set("spawn.world", location.getWorld().getName());
-        ConfigManager.get().set("spawn.x", location.getX());
-        ConfigManager.get().set("spawn.y", location.getY());
-        ConfigManager.get().set("spawn.z", location.getZ());
-        ConfigManager.get().set("spawn.yaw", location.getYaw());
-        ConfigManager.get().set("spawn.pitch", location.getPitch());
-        ConfigManager.save();
-
-        log.info("[KitPvP] Spawn saved successfully.");
-    }
-
-    /**
      * Loads the spawn point data from config files.
      */
     public void load() {
-        if (ConfigManager.get().get("spawn") == null) {
-            log.severe("[KitPvP] Spawn is not defined. Define it using /setspawn.");
+        if (Settings.config.get("spawn") == null) {
+            MessageUtil.log("&c[KitPvP] Spawn is not defined. Define it using /setspawn.");
             return;
         }
 
-        World world = Bukkit.getWorld(ConfigManager.get().getString("spawn.world"));
-        double x = ConfigManager.get().getDouble("spawn.x");
-        double y = ConfigManager.get().getDouble("spawn.y");
-        double z = ConfigManager.get().getDouble("spawn.z");
-        float yaw = ConfigManager.get().getInt("spawn.yaw");
-        float pitch = ConfigManager.get().getInt("spawn.pitch");
-        location = new Location(world, x, y, z, yaw, pitch);
+        location = new Location(Bukkit.getWorld(Settings.spawnWorld), Settings.spawnX,
+                Settings.spawnY, Settings.spawnZ, Settings.spawnYaw, Settings.spawnPitch);
 
         REGIONS.cacheRegions();
     }

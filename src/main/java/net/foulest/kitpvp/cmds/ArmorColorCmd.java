@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for applying RGB hex colors to any dyable leather armor
  * you have equipped. For testing new colors for new kits.
  */

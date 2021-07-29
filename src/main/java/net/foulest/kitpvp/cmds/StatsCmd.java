@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Foulest
  * @project KitPvP
- *
+ * <p>
  * Command for displaying a player's statistics.
  */
 @SuppressWarnings("MethodMayBeStatic")
@@ -31,6 +31,11 @@ public class StatsCmd {
 
         if (args.length() == 0) {
             playerData = PlayerData.getInstance(sender);
+
+            if (playerData == null) {
+                sender.kickPlayer("Disconnected");
+                return;
+            }
 
             MessageUtil.messagePlayer(sender, "");
             MessageUtil.messagePlayer(sender, " &a&lYour Stats");
@@ -61,6 +66,11 @@ public class StatsCmd {
             }
 
             playerData = PlayerData.getInstance(player);
+
+            if (playerData == null) {
+                player.kickPlayer("Disconnected");
+                return;
+            }
 
             MessageUtil.messagePlayer(sender, "");
             MessageUtil.messagePlayer(sender, " &a&l" + player.getName() + " Stats");
