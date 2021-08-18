@@ -47,6 +47,11 @@ public class ItemBuilder {
 
     public ItemBuilder unbreakable(boolean status) {
         ItemMeta meta = item.getItemMeta();
+
+        if (item.getType() == Material.AIR) {
+            return this;
+        }
+
         meta.spigot().setUnbreakable(status);
         item.setItemMeta(meta);
         return this;

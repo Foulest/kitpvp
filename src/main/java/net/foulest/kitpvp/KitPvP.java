@@ -34,6 +34,12 @@ import java.util.Objects;
 @Getter
 public class KitPvP extends JavaPlugin {
 
+    // TODO: refund missed snowballs
+    // TODO: block fisherman and imprisoner from hitting on koth
+    // TODO: golems don't move
+    // TODO: fix hulk ability
+    // TODO: fix KOTH bugs
+
     private static KitPvP instance;
     private CommandFramework framework;
     private HikariDataSource hikari;

@@ -36,10 +36,12 @@ public class KOTHListener implements Listener {
             KOTH.playersInKOTH.computeIfAbsent(koth, k -> new ArrayList<>());
         }
 
-        if (!KOTH.isInKOTH(event.getFrom()) && KOTH.isInKOTH(event.getTo())) {
-            KOTH.playersInKOTH.get(koth).add(player);
+        if (KOTH.isInKOTH(event.getTo())) {
+            if (!KOTH.playersInKOTH.get(koth).contains(player)) {
+                KOTH.playersInKOTH.get(koth).add(player);
+            }
 
-        } else if (KOTH.isInKOTH(event.getFrom()) && !KOTH.isInKOTH(event.getTo())) {
+        } else if (!KOTH.isInKOTH(event.getTo())) {
             KOTH.playersInKOTH.get(koth).remove(player);
         }
 
@@ -66,10 +68,12 @@ public class KOTHListener implements Listener {
             KOTH.playersInKOTH.computeIfAbsent(koth, k -> new ArrayList<>());
         }
 
-        if (!KOTH.isInKOTH(event.getFrom()) && KOTH.isInKOTH(event.getTo())) {
-            KOTH.playersInKOTH.get(koth).add(player);
+        if (KOTH.isInKOTH(event.getTo())) {
+            if (!KOTH.playersInKOTH.get(koth).contains(player)) {
+                KOTH.playersInKOTH.get(koth).add(player);
+            }
 
-        } else if (KOTH.isInKOTH(event.getFrom()) && !KOTH.isInKOTH(event.getTo())) {
+        } else if (!KOTH.isInKOTH(event.getTo())) {
             KOTH.playersInKOTH.get(koth).remove(player);
         }
 

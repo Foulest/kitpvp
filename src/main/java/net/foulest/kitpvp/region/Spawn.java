@@ -30,6 +30,13 @@ public class Spawn {
     }
 
     public void setLocation(Location loc) {
+        Settings.spawnX = loc.getX();
+        Settings.spawnY = loc.getY();
+        Settings.spawnZ = loc.getZ();
+        Settings.spawnYaw = loc.getYaw();
+        Settings.spawnPitch = loc.getPitch();
+        Settings.spawnWorld = loc.getWorld().getName();
+
         location = loc;
         loc.getWorld().setSpawnLocation(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
@@ -64,10 +71,6 @@ public class Spawn {
 
         player.setHealth(20);
         player.teleport(location);
-
-        // Might fix the yaw bug.
-        player.teleport(new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY(),
-                player.getLocation().getZ(), location.getYaw(), location.getPitch()));
     }
 
     /**
@@ -80,7 +83,7 @@ public class Spawn {
         }
 
         location = new Location(Bukkit.getWorld(Settings.spawnWorld), Settings.spawnX,
-                Settings.spawnY, Settings.spawnZ, Settings.spawnYaw, Settings.spawnPitch);
+                Settings.spawnY, Settings.spawnZ, (float) Settings.spawnYaw, (float) Settings.spawnPitch);
 
         REGIONS.cacheRegions();
     }

@@ -254,6 +254,8 @@ public class KitListener implements Listener {
             return;
         }
 
+        // TODO: make dogs better
+
         if (playerData.getKit() instanceof Tamer
                 && event.getAction().toString().contains("RIGHT")
                 && player.getItemInHand().getType() == Material.BONE

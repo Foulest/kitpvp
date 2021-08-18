@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +60,7 @@ public interface Kit {
      */
     default void apply(Player player) {
         PlayerData playerData = PlayerData.getInstance(player);
+        List<Integer> airSlots = new ArrayList<>();
 
         if (playerData == null) {
             player.kickPlayer("Disconnected");
@@ -120,7 +122,13 @@ public interface Kit {
             }
 
             if (item.getSlot() != 0) {
+                if (item.getItem().getType() == Material.AIR) {
+                    System.out.println("AIR - ADDED " + item.getSlot());
+                    airSlots.add(item.getSlot());
+                }
+
                 player.getInventory().setItem(item.getSlot(), item.getItem());
+
             } else {
                 player.getInventory().addItem(item.getItem());
             }
@@ -128,10 +136,14 @@ public interface Kit {
 
         // Sets the player's healing item.
         for (int i = 0; i < player.getInventory().getSize(); ++i) {
+            if (airSlots.contains(i) || player.getInventory().getItem(i) != null) {
+                continue;
+            }
+
             if (playerData.isUsingSoup()) {
-                player.getInventory().addItem(new ItemBuilder(Material.MUSHROOM_SOUP).name("&fMushroom Stew").getItem());
+                player.getInventory().setItem(i, new ItemBuilder(Material.MUSHROOM_SOUP).name("&fMushroom Stew").getItem());
             } else {
-                player.getInventory().addItem(new ItemBuilder(Material.POTION).durability(16421).name("&fSplash Potion of Healing").getItem());
+                player.getInventory().setItem(i, new ItemBuilder(Material.POTION).durability(16421).name("&fSplash Potion of Healing").getItem());
             }
         }
 

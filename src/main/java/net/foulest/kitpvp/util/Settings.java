@@ -17,8 +17,8 @@ public class Settings {
     public static double spawnX;
     public static double spawnY;
     public static double spawnZ;
-    public static float spawnYaw;
-    public static float spawnPitch;
+    public static double spawnYaw;
+    public static double spawnPitch;
     public static int killCoinBonus;
     public static int killExpBonus;
     public static int killStreakBonus;
@@ -51,7 +51,7 @@ public class Settings {
         config.addDefault("spawn.yaw", 90.0);
         config.addDefault("spawn.pitch", 0.0);
         config.addDefault("kill.coin-bonus", 10);
-        config.addDefault("kill.exp-bonus", 25);
+        config.addDefault("kill.exp-bonus", 15);
         config.addDefault("kill.streak-bonus", 5);
         config.addDefault("mysql.host", "host");
         config.addDefault("mysql.user", "user");
@@ -75,8 +75,8 @@ public class Settings {
         spawnX = config.getDouble("spawn.x");
         spawnY = config.getDouble("spawn.y");
         spawnZ = config.getDouble("spawn.z");
-        spawnYaw = (float) config.getDouble("spawn.yaw");
-        spawnPitch = (float) config.getDouble("spawn.pitch");
+        spawnYaw = config.getDouble("spawn.yaw");
+        spawnPitch = config.getDouble("spawn.pitch");
 
         killCoinBonus = config.getInt("kill.coin-bonus");
         killExpBonus = config.getInt("kill.exp-bonus");
@@ -97,7 +97,7 @@ public class Settings {
         config.set("spawn.y", spawnY);
         config.set("spawn.z", spawnZ);
         config.set("spawn.yaw", spawnYaw);
-        config.set("spawn.yaw", spawnPitch);
+        config.set("spawn.pitch", spawnPitch);
 
         config.set("kill.coin-bonus", killCoinBonus);
         config.set("kill.exp-bonus", killExpBonus);

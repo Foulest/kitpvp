@@ -199,6 +199,7 @@ public class DeathListener implements Listener {
             NMSUtil.getConnection(receiver).a(new PacketPlayInClientCommand(PacketPlayInClientCommand.EnumClientCommand.PERFORM_RESPAWN));
 
             // Teleports the player to spawn.
+            receiver.getInventory().setHeldItemSlot(0);
             SPAWN.teleport(receiver);
             receiver.getInventory().setHeldItemSlot(0);
         }
